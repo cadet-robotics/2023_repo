@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -8,7 +11,9 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.PeriodicCounter;
 import frc.robot.Constants.DriveCANConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.swerve.RevMaxSwerveModule;
@@ -19,7 +24,11 @@ import frc.robot.swerve.RevMaxSwerveModule;
  * @author REVRobotics
 */
 public class DriveSubsystem extends SubsystemBase {
-    public static final class SwerveModules {
+    private static boolean driveEnabled = true;
+
+    private PeriodicCounter debugCounter = new PeriodicCounter(10);
+
+    private static final class SwerveModules {
         private static final RevMaxSwerveModule m_frontLeft = new RevMaxSwerveModule(
             DriveCANConstants.kFrontLeftDrivingCanId,
             DriveCANConstants.kFrontLeftTurningCanId,
@@ -46,6 +55,14 @@ public class DriveSubsystem extends SubsystemBase {
         buildSwerveModulePositions()
     );
 
+    public void setDriveEnabled(boolean value) {
+        driveEnabled = value;
+    }
+
+    public boolean getDriveEnabled() {
+        return driveEnabled;
+    }
+
     public SwerveModulePosition[] buildSwerveModulePositions() {
         return new SwerveModulePosition[] {
             SwerveModules.m_frontLeft.getPosition(),
@@ -55,12 +72,39 @@ public class DriveSubsystem extends SubsystemBase {
         };
     }
 
+    public SwerveModuleState[] getSwerveModuleStates() {
+        return new SwerveModuleState[] {
+            SwerveModules.m_frontLeft.getState(),
+            SwerveModules.m_frontRight.getState(),
+            SwerveModules.m_backLeft.getState(),
+            SwerveModules.m_backRight.getState()
+        };
+    }
+
     @Override
     public void periodic() {
         m_odometry.update(
             Rotation2d.fromDegrees(m_gyro.getAngle()),
             buildSwerveModulePositions()
         );
+
+        // debug data
+        SwerveModuleState[] states = getSwerveModuleStates();
+        
+        debugCounter.periodic(() -> {
+            SmartDashboard.putNumber("swerve/angles/frontLeft", states[0].angle.getDegrees());
+            SmartDashboard.putNumber("swerve/angles/frontRight", states[1].angle.getDegrees());
+            SmartDashboard.putNumber("swerve/angles/backLeft", states[2].angle.getDegrees());
+            SmartDashboard.putNumber("swerve/angles/backRight", states[3].angle.getDegrees());
+    
+            SmartDashboard.putNumber("swerve/speed/frontLeft", states[0].speedMetersPerSecond);
+            SmartDashboard.putNumber("swerve/speed/frontRight", states[1].speedMetersPerSecond);
+            SmartDashboard.putNumber("swerve/speed/backLeft", states[2].speedMetersPerSecond);
+            SmartDashboard.putNumber("swerve/speed/backRight", states[3].speedMetersPerSecond);
+
+            SmartDashboard.putNumber("gyro/angle", m_gyro.getAngle());
+            SmartDashboard.putNumber("swerve/heading", getHeading());
+        });
     }
 
     public Pose2d getPose() {
@@ -77,8 +121,13 @@ public class DriveSubsystem extends SubsystemBase {
 
     /**
      * Drive method, taking in joystick positions
+     * @return Returns the success value of this operation
      */
-    public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
+    public boolean drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
+        if (!driveEnabled) {
+            return false;
+        }
+        
         xSpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
         ySpeed *= DriveConstants.kMaxSpeedMetersPerSecond;
         rot *= DriveConstants.kMaxAngularSpeed;
@@ -93,6 +142,8 @@ public class DriveSubsystem extends SubsystemBase {
         SwerveModules.m_frontRight.setDesiredState(swerveModuleStates[1]);
         SwerveModules.m_backLeft.setDesiredState(swerveModuleStates[2]);
         SwerveModules.m_backRight.setDesiredState(swerveModuleStates[3]);
+
+        return true;
     }
 
     /**

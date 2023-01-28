@@ -28,7 +28,14 @@ public final class Constants
 
         // driver controller
         public static final class DriverController {
-            public static final int LOCK_BUTTON = 0;
+            public static final double DEADZONE = 0.1;
+
+            public static final int WHEEL_LOCK_BUTTON = 11;
+        }
+
+        public static final class CoDriverController {
+            public static final int WHEEL_LOCK_BUTTON = 7;
+            public static final int WHEEL_UNLOCK_BUTTON = 8;
         }
     }
 

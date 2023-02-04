@@ -23,9 +23,9 @@ import frc.robot.swerve.RevMaxSwerveModule;
  * @author Rob Heslin
 */
 public class DriveSubsystem extends SubsystemBase {
-    // TODO: this is bad, fix statics
-    private static boolean driveEnabled = true;
-    public static boolean homingMode = false;
+    // TODO: this is bad, commit to public or accessors
+    private boolean driveEnabled = true;
+    public boolean homingMode = false;
 
     private PeriodicCounter debugCounter = new PeriodicCounter(10);
 
@@ -56,10 +56,6 @@ public class DriveSubsystem extends SubsystemBase {
         Rotation2d.fromDegrees(m_gyro.getAngle()),
         buildSwerveModulePositions()
     );
-    
-    public DriveSubsystem() {
-
-    }
 
     public void setDriveEnabled(boolean value) {
         driveEnabled = value;
@@ -108,7 +104,10 @@ public class DriveSubsystem extends SubsystemBase {
             SmartDashboard.putNumber("swerve/speed/backLeft", states[2].speedMetersPerSecond);
             SmartDashboard.putNumber("swerve/speed/backRight", states[3].speedMetersPerSecond);
 
+            // gyro output
             SmartDashboard.putNumber("gyro/angle", m_gyro.getAngle());
+            SmartDashboard.putNumber("gyro/angleRot2d", m_gyro.getRotation2d().getDegrees());
+
             SmartDashboard.putNumber("swerve/heading", getHeading());
 
             SmartDashboard.putNumber("swerve/encoders/absolute/frontLeft",

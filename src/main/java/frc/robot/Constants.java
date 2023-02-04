@@ -12,14 +12,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
-/**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
- * constants. This class should not be used for any other purpose. All constants should be declared
- * globally (i.e. public static). Do not put anything functional in this class.
- *
- * <p>It is advised to statically import this class (or one of its inner classes) wherever the
- * constants are needed, to reduce verbosity.
- */
+// TODO: fix casing 
 public final class Constants
 {
     public static final class IOConstants {
@@ -80,7 +73,8 @@ public final class Constants
     }
     
     public static final class CANConstants {
-        
+        public static final int MAIN_MOTOR = 20;
+        public static final int HELPER_MOTOR = 21;
     }
 
     public static final class DriveConstants {
@@ -90,7 +84,6 @@ public final class Constants
         public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
 
         // Chassis configuration
-        // TODO: check and make sure these numbers are right cuz if they arent then uh oh stinky
         public static final double kTrackWidth = Units.inchesToMeters(28.5); // what is this number
         // Distance between centers of right and left wheels on robot
         public static final double kWheelBase = Units.inchesToMeters(23.5);
@@ -179,8 +172,10 @@ public final class Constants
     public static final class NeoMotorConstants {
         public static final double kFreeSpeedRpm = 5676;
 
-        public static final double homingSpeedCoarse = 0.075;
-        public static final double homingSpeedFine = 0.025;
+        public static final double HOMING_SPEED_COARSE = 0.075;
+        public static final double HOMING_SPEED_FINE = 0.025;
+
+        public static final double ARM_SPEED = 0.1;
     }
 
     public static final class LEDColors {
@@ -188,5 +183,11 @@ public final class Constants
         public static final double GREEN = 0.77;
         public static final double BLUE = 0.85;
         public static final double YELLOW = 0.69;
+    }
+
+    public static final class ArmPositions {
+        // TODO: these values are made up, testing has to be done
+        public static final double ENCODER_MAX = 3.0;
+        public static final double ENCODER_HOME = 0;
     }
 }

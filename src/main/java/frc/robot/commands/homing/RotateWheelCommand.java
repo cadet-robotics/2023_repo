@@ -18,9 +18,9 @@ public class RotateWheelCommand extends CommandBase {
     @Override
     public void execute() {
         if (homingController.button(HomingController.COARSE_HOMING_SPEED).getAsBoolean()) {
-            motor.set(NeoMotorConstants.homingSpeedCoarse);
+            motor.set(NeoMotorConstants.HOMING_SPEED_COARSE);
         } else {
-            motor.set(NeoMotorConstants.homingSpeedFine);
+            motor.set(NeoMotorConstants.HOMING_SPEED_FINE);
         }
     }
 

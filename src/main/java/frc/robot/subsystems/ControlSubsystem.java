@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import frc.robot.PeriodicCounter;
 import frc.robot.Constants.IOConstants;
@@ -12,7 +11,7 @@ import frc.robot.Constants.IOConstants.CoDriverController;
 import frc.robot.Constants.IOConstants.DriverController;
 import frc.robot.Constants.IOConstants.HomingController;
 import frc.robot.commands.SetLightValueCommand;
-import frc.robot.commands.controls.codriver.SetWheelLockStateCommand;
+import frc.robot.commands.SetWheelLockStateCommand;
 import frc.robot.commands.homing.ResetEncodersCommand;
 import frc.robot.commands.homing.RotateWheelCommand;
 import frc.robot.commands.homing.SetHomingModeCommand;
@@ -26,7 +25,7 @@ import frc.robot.subsystems.DriveSubsystem.SwerveModules;
  */
 public class ControlSubsystem extends SubsystemBase {
     // Driver input configuration
-    private final CommandJoystick driverStick = new CommandJoystick(IOConstants.DRIVER_CONTROLLER_PORT);
+    private final CommandPS4Controller driverController = new CommandPS4Controller(IOConstants.DRIVER_CONTROLLER_PORT);
     private final CommandPS4Controller codriverController = new CommandPS4Controller(IOConstants.CODRIVER_CONTROLLER_PORT);
     private final CommandPS4Controller homingController = new CommandPS4Controller(IOConstants.HOMING_CONTROLLER_PORT);
 
@@ -96,15 +95,25 @@ public class ControlSubsystem extends SubsystemBase {
             .onTrue(new SetLightValueCommand(ledSubsystem, LEDColors.YELLOW));
     }
 
+
+    //CANSparkMax testMotor = new CANSparkMax(20, MotorType.kBrushless);
+    // TODO: convert driving code into command so ControlSubsystem can go byebye
     @Override
     public void periodic() {
         // drive robot
         // TODO: change the fieldRelative field from false to a configurable/constant
-        double x = driverStick.getY(), y = driverStick.getX(), z = driverStick.getZ();
+        double x = driverController.getRightY(), y = driverController.getRightX(), z = driverController.getLeftX();
         x = x < DriverController.DEADZONE && x > -1 * DriverController.DEADZONE ? 0 : x;
         y = y < DriverController.DEADZONE && y > -1 * DriverController.DEADZONE ? 0 : y;
         z = z < DriverController.DEADZONE && z > -1 * DriverController.DEADZONE ? 0 : z;
+
         driveSubsystem.drive(x, y, z, false);
+
+        /*if (driverController.button(2).getAsBoolean()) {
+            testMotor.set(0.1);
+        } else {
+            testMotor.set(0.0);
+        }*/
 
         // debug data
         final double X = x, Y = y, Z = z;

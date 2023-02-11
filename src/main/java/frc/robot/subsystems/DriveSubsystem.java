@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -12,8 +14,10 @@ import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.PeriodicCounter;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveCANConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.commands.TeleOpDriveCommand;
 import frc.robot.swerve.RevMaxSwerveModule;
 
 /**
@@ -23,42 +27,59 @@ import frc.robot.swerve.RevMaxSwerveModule;
  * @author Rob Heslin
 */
 public class DriveSubsystem extends SubsystemBase {
-    // TODO: this is bad, commit to public or accessors
+    private RobotContainer robotContainer;
+
     private boolean driveEnabled = true;
-    public boolean homingMode = false;
+    public boolean homingMode = false; // TODO: get rid of this
 
     private PeriodicCounter debugCounter = new PeriodicCounter(10);
+
+    private TeleOpDriveCommand teleOpDriveCommand;
 
     // TODO: revert to private after testing is done
     public static final class SwerveModules {
         public static final RevMaxSwerveModule m_frontLeft = new RevMaxSwerveModule(
             DriveCANConstants.kFrontLeftDrivingCanId,
             DriveCANConstants.kFrontLeftTurningCanId,
-            Preferences.getDouble("swerveFrontLeftOffset", 0.0));
+            Preferences.getDouble("swerveFrontLeftOffset", DriveConstants.frontLeftOffset));
         public static final RevMaxSwerveModule m_frontRight = new RevMaxSwerveModule(
             DriveCANConstants.kFrontRightDrivingCanId,
             DriveCANConstants.kFrontRightTurningCanId,
-            Preferences.getDouble("swerveFrontRightOffset", 0.0));
+            Preferences.getDouble("swerveFrontRightOffset", DriveConstants.frontRightOffset));
         public static final RevMaxSwerveModule m_backLeft = new RevMaxSwerveModule(
             DriveCANConstants.kRearLeftDrivingCanId,
             DriveCANConstants.kRearLeftTurningCanId,
-            Preferences.getDouble("swerveBackLeftOffset", 0.0));
+            Preferences.getDouble("swerveBackLeftOffset", DriveConstants.backLeftOffset));
         public static final RevMaxSwerveModule m_backRight = new RevMaxSwerveModule(
             DriveCANConstants.kRearRightDrivingCanId,
             DriveCANConstants.kRearRightTurningCanId,
-            Preferences.getDouble("swerveBackRightOffset", 0.0));
+            Preferences.getDouble("swerveBackRightOffset", DriveConstants.backRightOffset));
     }
 
-    private ADXRS450_Gyro m_gyro = new ADXRS450_Gyro();
+    //private ADXRS450_Gyro m_gyro = new ADXRS450_Gyro();
+    private AHRS m_ahrs = new AHRS();
 
     private SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
         DriveConstants.kDriveKinematics,
-        Rotation2d.fromDegrees(m_gyro.getAngle()),
+        Rotation2d.fromDegrees(m_ahrs.getAngle()),
         buildSwerveModulePositions()
     );
 
+    public DriveSubsystem(RobotContainer robotContainer) {
+        this.robotContainer = robotContainer;
+    }
+
     public void setDriveEnabled(boolean value) {
         driveEnabled = value;
+        if (driveEnabled) {
+            teleOpDriveCommand = new TeleOpDriveCommand(this, robotContainer.driverController);
+            teleOpDriveCommand.schedule();
+        } else {
+            if (teleOpDriveCommand != null) {
+                teleOpDriveCommand.cancel();
+            }
+            teleOpDriveCommand = null;
+        }
     }
 
     public boolean getDriveEnabled() {
@@ -86,7 +107,7 @@ public class DriveSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         m_odometry.update(
-            Rotation2d.fromDegrees(m_gyro.getAngle()),
+            Rotation2d.fromDegrees(m_ahrs.getAngle()),
             buildSwerveModulePositions()
         );
 
@@ -105,8 +126,10 @@ public class DriveSubsystem extends SubsystemBase {
             SmartDashboard.putNumber("swerve/speed/backRight", states[3].speedMetersPerSecond);
 
             // gyro output
-            SmartDashboard.putNumber("gyro/angle", m_gyro.getAngle());
+            /*SmartDashboard.putNumber("gyro/angle", m_gyro.getAngle());
             SmartDashboard.putNumber("gyro/angleRot2d", m_gyro.getRotation2d().getDegrees());
+            SmartDashboard.putNumber("gyro/rate", m_gyro.getRate());
+            SmartDashboard.putBoolean("gyro/connected", m_gyro.isConnected());*/
 
             SmartDashboard.putNumber("swerve/heading", getHeading());
 
@@ -118,6 +141,14 @@ public class DriveSubsystem extends SubsystemBase {
                 SwerveModules.m_backLeft.getTurningAbsoluteEncoder().getPosition());
             SmartDashboard.putNumber("swerve/encoders/absolute/backRight",
                 SwerveModules.m_backRight.getTurningAbsoluteEncoder().getPosition());
+            
+            SmartDashboard.putBoolean("swerve/driveEnabled", driveEnabled);
+            SmartDashboard.putBoolean("swerve/homingMode", homingMode);
+
+            SmartDashboard.putNumber("ahrs/gyro/x", m_ahrs.getRawGyroX());
+            SmartDashboard.putNumber("ahrs/gyro/y", m_ahrs.getRawGyroY());
+            SmartDashboard.putNumber("ahrs/gyro/z", m_ahrs.getRawGyroZ());
+            SmartDashboard.putNumber("ahrs/gyro/angle", m_ahrs.getAngle());
         });
     }
 
@@ -127,7 +158,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     public void resetOdometry(Pose2d pose) {
         m_odometry.resetPosition(
-            Rotation2d.fromDegrees(m_gyro.getAngle()),
+            Rotation2d.fromDegrees(m_ahrs.getAngle()),
             buildSwerveModulePositions(),
             pose
         );
@@ -148,7 +179,7 @@ public class DriveSubsystem extends SubsystemBase {
 
         SwerveModuleState[] swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
             fieldRelative
-                ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_gyro.getRotation2d()) // Rotation2d.fromDegrees(m_gyro.getAngle())
+                ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, m_ahrs.getRotation2d()) // Rotation2d.fromDegrees(m_gyro.getAngle())
                 : new ChassisSpeeds(xSpeed, ySpeed, rot));
 
         setModuleStates(swerveModuleStates);
@@ -189,7 +220,7 @@ public class DriveSubsystem extends SubsystemBase {
      * Zeros the heading of the robot
      */
     public void zeroHeading() {
-        m_gyro.reset();
+        m_ahrs.reset();
     }
 
     /**
@@ -197,14 +228,14 @@ public class DriveSubsystem extends SubsystemBase {
      */
     public double getHeading() {
         //return Rotation2d.fromDegrees(m_gyro.getAngle()).getDegrees();
-        return m_gyro.getRotation2d().getDegrees();
+        return m_ahrs.getRotation2d().getDegrees();
     }
 
     /**
      * @return turning rate of the robot, in degrees per second
      */
     public double getTurnRate() {
-        return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+        return m_ahrs.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
     }
 
     /**
@@ -214,20 +245,20 @@ public class DriveSubsystem extends SubsystemBase {
         // pull offset from preferences
         double frontLeftOffset = Preferences.getDouble("swerveFrontLeftOffset", 0.0);
         // get the current angle and add to the offset, the result is a new offset, robot must be restarted for module to accept
-        frontLeftOffset += SwerveModules.m_frontLeft.getState().angle.getRadians();
+        frontLeftOffset = SwerveModules.m_frontLeft.getState().angle.getRadians();
         // set the new offset into Prefferences, to be recalled next boot
         Preferences.setDouble("swerveFrontLeftOffset", frontLeftOffset);
 
         double frontRightOffset = Preferences.getDouble("swerveFrontRightOffset", 0.0);
-        frontRightOffset += SwerveModules.m_frontRight.getState().angle.getRadians();
+        frontRightOffset = SwerveModules.m_frontRight.getState().angle.getRadians();
         Preferences.setDouble("swerveFrontRightOffset", frontRightOffset);
 
         double backRightOffset = Preferences.getDouble("swerveBackRightOffset", 0.0);
-        backRightOffset += SwerveModules.m_backRight.getState().angle.getRadians();
+        backRightOffset = SwerveModules.m_backRight.getState().angle.getRadians();
         Preferences.setDouble("swerveBackRightOffset", backRightOffset);
 
         double backLeftOffset = Preferences.getDouble("swerveBackLeftOffset", 0.0);
-        backLeftOffset += SwerveModules.m_backLeft.getState().angle.getRadians();
+        backLeftOffset = SwerveModules.m_backLeft.getState().angle.getRadians();
         Preferences.setDouble("swerveBackLeftOffset", backLeftOffset);
     }
 }

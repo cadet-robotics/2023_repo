@@ -38,5 +38,13 @@
     "properties": {
       "persistent": true
     }
+  },
+  {
+    "name": "/Preferences/maxAngularMetersPerSecond",
+    "type": "double",
+    "value": 3.0,
+    "properties": {
+      "persistent": true
+    }
   }
 ]

@@ -21,12 +21,12 @@ public final class Constants
         public static final int HOMING_CONTROLLER_PORT = 2;
 
         // driver controller
-        public static final class DriverController {
-            public static final double DEADZONE = 0.1;
+        public static final class DriverControllerConsts {
+            public static final double DEADZONE = 0.05;
         }
 
         // codriver controller
-        public static final class CoDriverController {
+        public static final class CoDriverControllerConsts {
             public static final int WHEEL_LOCK_BUTTON = 7;
             public static final int WHEEL_UNLOCK_BUTTON = 8;
 
@@ -37,7 +37,7 @@ public final class Constants
         }
 
         // homing controller
-        public static final class HomingController {
+        public static final class HomingControllerConsts {
             public static final int ROTATE_BL_BUTTON = 1; // X
             public static final int ROTATE_BR_BUTTON = 2; // A
             public static final int ROTATE_FR_BUTTON = 3; // B
@@ -49,9 +49,9 @@ public final class Constants
             public static final int COARSE_HOMING_SPEED = 7; // LT
 
             public static final int ZERO_SWERVE_MODULES = 8; // RT
+            
             public static final int EXIT_HOMING_MODE = 9; // back
             public static final int INSERT_HOMING_MODE = 10; // start
-
         }
     }
 
@@ -73,8 +73,8 @@ public final class Constants
     }
     
     public static final class CANConstants {
-        public static final int MAIN_MOTOR = 20;
-        public static final int HELPER_MOTOR = 21;
+        public static final int MAIN_MOTOR = 30;
+        public static final int HELPER_MOTOR = 31;
     }
 
     public static final class DriveConstants {
@@ -94,11 +94,11 @@ public final class Constants
             new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
             new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
-        // Angular offsets of the modules relative to the chassis in radians
-        /*public static final double kFrontLeftChassisAngularOffset = -Math.PI / 2;
-        public static final double kFrontRightChassisAngularOffset = 0;
-        public static final double kBackLeftChassisAngularOffset = Math.PI;
-        public static final double kBackRightChassisAngularOffset = Math.PI / 2;*/
+        // Default encoder offsets, in case preferences fails
+        public static final double frontLeftOffset = 1.68753;
+        public static final double frontRightOffset = 4.279077;
+        public static final double backLeftOffset = 0;//3.17916;
+        public static final double backRightOffset = 0;
 
         public static final boolean kGyroReversed = false;
     } 
@@ -185,9 +185,11 @@ public final class Constants
         public static final double YELLOW = 0.69;
     }
 
-    public static final class ArmPositions {
+    public static final class ArmConstants {
         // TODO: these values are made up, testing has to be done
-        public static final double ENCODER_MAX = 3.0;
-        public static final double ENCODER_HOME = 0;
+        public static final double ARM_MAX_POSITION = 3.0;
+        public static final double ARM_MIN_POSITION = 6;
+        
+        public static final double ENCODER_MAX = 6.2;
     }
 }

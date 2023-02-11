@@ -1,23 +1,21 @@
 package frc.robot.commands.homing;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.RobotContainer;
 
 public class SetHomingModeCommand extends CommandBase {
-    private DriveSubsystem driveSubsystem;
+    private RobotContainer robotContainer;
     private boolean enableHoming;
 
-    public SetHomingModeCommand(DriveSubsystem driveSubsystem, boolean enableHoming) {
-        this.driveSubsystem = driveSubsystem;
+    public SetHomingModeCommand(RobotContainer robotContainer, boolean enableHoming) {
+        this.robotContainer = robotContainer;
         this.enableHoming = enableHoming;
-        
-        addRequirements(driveSubsystem);
     }
 
     @Override
     public void initialize() {
-        driveSubsystem.setDriveEnabled(!enableHoming);
-        driveSubsystem.homingMode = enableHoming;
+        robotContainer.driveSubsystem.setDriveEnabled(!enableHoming);
+        robotContainer.driveSubsystem.homingMode = enableHoming;
     }
     
     @Override

@@ -73,8 +73,18 @@ public final class Constants
     }
     
     public static final class CANConstants {
-        public static final int MAIN_MOTOR = 30;
-        public static final int HELPER_MOTOR = 31;
+        public static final int ARM_MAIN_MOTOR = 30;
+        public static final int ARM_HELPER_MOTOR = 31;
+
+        public static final int INTAKE_MOTOR_LEFT = 32;
+        public static final int INTAKE_MOTOR_RIGHT = 33;
+    }
+
+    public static final class PneumaticsConstants {
+        public static final int LEFT_SOLENOID_FORWARD = 1; 
+        public static final int LEFT_SOLENOID_REVERSE = 2; 
+        public static final int RIGHT_SOLENOID_FORWARD = 3; 
+        public static final int RIGHT_SOLENOID_REVERSE = 4;
     }
 
     public static final class DriveConstants {
@@ -186,10 +196,15 @@ public final class Constants
     }
 
     public static final class ArmConstants {
-        // TODO: these values are made up, testing has to be done
-        public static final double ARM_MAX_POSITION = 3.0;
-        public static final double ARM_MIN_POSITION = 6;
+        // TODO: find more accurate values for these
+        public static final double MAX_POSITION = 0.39;
+        public static final double MIN_POSITION = 0.0136;
+        public static final double RANGE = MAX_POSITION - MIN_POSITION;
         
-        public static final double ENCODER_MAX = 6.2;
+        public static final double RELATIVE_ACCEPTABLE_MARGIN = 0.02;
+        public static final double FINE_SPEED_MARGIN = 0.1;
+
+        public static final double COARSE_SPEED = 0.35;
+        public static final double FINE_SPEED = 0.15;
     }
 }

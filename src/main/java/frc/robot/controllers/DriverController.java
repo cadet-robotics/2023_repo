@@ -29,8 +29,8 @@ class RunArmMotorTemp extends CommandBase {
 
     @Override
     public void initialize() {
-        robotContainer.armSubsystem.getMainMotor().set(0.2 * (inverse ? -1 : 1));
-        robotContainer.armSubsystem.getHelperMotor().set(0.2 * (inverse ? -1 : 1));
+        robotContainer.armSubsystem.getMainMotor().set(0.4 * (inverse ? -1 : 1));
+        robotContainer.armSubsystem.getHelperMotor().set(0.4 * (inverse ? -1 : 1));
     }
 
     @Override

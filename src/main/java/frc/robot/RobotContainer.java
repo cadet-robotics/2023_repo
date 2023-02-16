@@ -6,20 +6,14 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.IOConstants;
 import frc.robot.Constants.PWMConstants;
-import frc.robot.Constants.IOConstants.CoDriverControllerConsts;
-import frc.robot.Constants.IOConstants.DriverControllerConsts;
 import frc.robot.controllers.CoDriverController;
 import frc.robot.controllers.DriverController;
 import frc.robot.controllers.HomingController;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.ControlSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 
@@ -56,9 +50,9 @@ public class RobotContainer
         armSubsystem = new ArmSubsystem();
         driveSubsystem = new DriveSubsystem(this);
 
-        driverController.button(1).onTrue(Commands.runOnce(() -> {
+        /*driverController.button(1).onTrue(Commands.runOnce(() -> {
 
-        }));
+        }));*/
         
         // init controller bindings
         driverController.initBindings();

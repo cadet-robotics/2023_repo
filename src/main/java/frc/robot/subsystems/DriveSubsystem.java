@@ -36,24 +36,29 @@ public class DriveSubsystem extends SubsystemBase {
 
     private TeleOpDriveCommand teleOpDriveCommand;
 
+    private final double m_frontLeftOffset;
+    private final double m_frontRightOffset;
+    private final double m_backLeftOffset;
+    private final double m_backRightOffset;
+
     // TODO: revert to private after testing is done
     public static final class SwerveModules {
         public static final RevMaxSwerveModule m_frontLeft = new RevMaxSwerveModule(
             DriveCANConstants.kFrontLeftDrivingCanId,
             DriveCANConstants.kFrontLeftTurningCanId,
-            Preferences.getDouble("swerveFrontLeftOffset", DriveConstants.frontLeftOffset));
+            Preferences.getDouble("swerveFrontLeftOffset", 0.0));
         public static final RevMaxSwerveModule m_frontRight = new RevMaxSwerveModule(
             DriveCANConstants.kFrontRightDrivingCanId,
             DriveCANConstants.kFrontRightTurningCanId,
-            Preferences.getDouble("swerveFrontRightOffset", DriveConstants.frontRightOffset));
+             Preferences.getDouble("swerveFrontRightOffset", 0.0));
         public static final RevMaxSwerveModule m_backLeft = new RevMaxSwerveModule(
             DriveCANConstants.kRearLeftDrivingCanId,
             DriveCANConstants.kRearLeftTurningCanId,
-            Preferences.getDouble("swerveBackLeftOffset", DriveConstants.backLeftOffset));
+            Preferences.getDouble("swerveBackLeftOffset", 0.0));
         public static final RevMaxSwerveModule m_backRight = new RevMaxSwerveModule(
             DriveCANConstants.kRearRightDrivingCanId,
             DriveCANConstants.kRearRightTurningCanId,
-            Preferences.getDouble("swerveBackRightOffset", DriveConstants.backRightOffset));
+            Preferences.getDouble("swerveBackRightOffset", 0.0));
     }
 
     //private ADXRS450_Gyro m_gyro = new ADXRS450_Gyro();
@@ -67,6 +72,11 @@ public class DriveSubsystem extends SubsystemBase {
 
     public DriveSubsystem(RobotContainer robotContainer) {
         this.robotContainer = robotContainer;
+        // pull offset from preferences
+        this.m_frontLeftOffset = Preferences.getDouble("swerveFrontLeftOffset", 0.0);
+        this.m_frontRightOffset = Preferences.getDouble("swerveFrontRightOffset", 0.0);
+        this.m_backLeftOffset = Preferences.getDouble("swerveBackLeftOffset", 0.0);
+        this.m_backRightOffset = Preferences.getDouble("swerveBackRightOffset", 0.0);
     }
 
     public void setDriveEnabled(boolean value) {
@@ -242,23 +252,19 @@ public class DriveSubsystem extends SubsystemBase {
      * Sets the zero positions for all the motors
      */
     public void setModuleZeros() {
-        // pull offset from preferences
-        double frontLeftOffset = Preferences.getDouble("swerveFrontLeftOffset", 0.0);
+       
         // get the current angle and add to the offset, the result is a new offset, robot must be restarted for module to accept
-        frontLeftOffset = SwerveModules.m_frontLeft.getState().angle.getRadians();
+        double frontLeftOffset = SwerveModules.m_frontLeft.getState().angle.getRadians() + this.m_frontLeftOffset;
         // set the new offset into Prefferences, to be recalled next boot
         Preferences.setDouble("swerveFrontLeftOffset", frontLeftOffset);
 
-        double frontRightOffset = Preferences.getDouble("swerveFrontRightOffset", 0.0);
-        frontRightOffset = SwerveModules.m_frontRight.getState().angle.getRadians();
+        double frontRightOffset = SwerveModules.m_frontRight.getState().angle.getRadians() + this.m_frontRightOffset;
         Preferences.setDouble("swerveFrontRightOffset", frontRightOffset);
 
-        double backRightOffset = Preferences.getDouble("swerveBackRightOffset", 0.0);
-        backRightOffset = SwerveModules.m_backRight.getState().angle.getRadians();
+        double backRightOffset = SwerveModules.m_backRight.getState().angle.getRadians() + this.m_backRightOffset;
         Preferences.setDouble("swerveBackRightOffset", backRightOffset);
 
-        double backLeftOffset = Preferences.getDouble("swerveBackLeftOffset", 0.0);
-        backLeftOffset = SwerveModules.m_backLeft.getState().angle.getRadians();
+        double backLeftOffset = SwerveModules.m_backLeft.getState().angle.getRadians() + this.m_backLeftOffset;
         Preferences.setDouble("swerveBackLeftOffset", backLeftOffset);
     }
 }

@@ -95,8 +95,8 @@ public final class Constants
             new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
         // Default encoder offsets, in case preferences fails
-        public static final double frontLeftOffset = 1.68753;
-        public static final double frontRightOffset = 4.279077;
+        public static final double frontLeftOffset = 0.0;//1.68753;
+        public static final double frontRightOffset = 0.0;//.279077;
         public static final double backLeftOffset = 0;//3.17916;
         public static final double backRightOffset = 0;
 

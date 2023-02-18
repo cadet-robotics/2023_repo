@@ -10,10 +10,17 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.ExampleSubsystem;
 
 
-
+/**
+ * This class is an example class for an automomous command 
+ */
 public final class Autos
 {
-    /** Example static factory for an autonomous command. */
+    /** Example static factory for an autonomous command. 
+     * 
+     * @param subsystem example subsystem
+     * @return example CommandBase from example subsystem
+    */
+    
     public static CommandBase exampleAuto(ExampleSubsystem subsystem)
     {
         return Commands.sequence(subsystem.exampleMethodCommand(), new ExampleCommand(subsystem));

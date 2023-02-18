@@ -78,11 +78,15 @@ public final class Constants
     public static final class PWMConstants {
         public static final int LED_PWM = 0;
     }
-    
+    /**
+     * This class is used for CAN constants
+     */
     public static final class CANConstants {
         
     }
-
+    /**
+     * This class contains the drive constants
+     */
     public static final class DriveConstants {
         // Driving Parameters - Note that these are not the maximum capable speeds of
         // the robot, rather the allowed maximum speeds
@@ -160,7 +164,9 @@ public final class Constants
         public static final int kDrivingMotorCurrentLimit = 50; // amps
         public static final int kTurningMotorCurrentLimit = 20; // amps
     }
-
+    /**
+     * This class is used for auto constants
+     */
     public static final class AutoConstants {
         public static final double kMaxSpeedMetersPerSecond = 3;
         public static final double kMaxAccelerationMetersPerSecondSquared = 3;

@@ -34,7 +34,7 @@
   {
     "name": "/Preferences/maxSpeedMetersPerSecond",
     "type": "double",
-    "value": 100.0,
+    "value": 1.0,
     "properties": {
       "persistent": true
     }

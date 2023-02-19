@@ -12,14 +12,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
-/**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
- * constants. This class should not be used for any other purpose. All constants should be declared
- * globally (i.e. public static). Do not put anything functional in this class.
- *
- * <p>It is advised to statically import this class (or one of its inner classes) wherever the
- * constants are needed, to reduce verbosity.
- */
+// TODO: fix casing 
 public final class Constants
 {
     public static final class IOConstants {
@@ -28,12 +21,12 @@ public final class Constants
         public static final int HOMING_CONTROLLER_PORT = 2;
 
         // driver controller
-        public static final class DriverController {
-            public static final double DEADZONE = 0.1;
+        public static final class DriverControllerConsts {
+            public static final double DEADZONE = 0.05;
         }
 
         // codriver controller
-        public static final class CoDriverController {
+        public static final class CoDriverControllerConsts {
             public static final int WHEEL_LOCK_BUTTON = 7;
             public static final int WHEEL_UNLOCK_BUTTON = 8;
 
@@ -44,7 +37,7 @@ public final class Constants
         }
 
         // homing controller
-        public static final class HomingController {
+        public static final class HomingControllerConsts {
             public static final int ROTATE_BL_BUTTON = 1; // X
             public static final int ROTATE_BR_BUTTON = 2; // A
             public static final int ROTATE_FR_BUTTON = 3; // B
@@ -56,9 +49,9 @@ public final class Constants
             public static final int COARSE_HOMING_SPEED = 7; // LT
 
             public static final int ZERO_SWERVE_MODULES = 8; // RT
+            
             public static final int EXIT_HOMING_MODE = 9; // back
             public static final int INSERT_HOMING_MODE = 10; // start
-
         }
     }
 
@@ -82,7 +75,18 @@ public final class Constants
      * This class is used for CAN constants
      */
     public static final class CANConstants {
-        
+        public static final int ARM_MAIN_MOTOR = 30;
+        public static final int ARM_HELPER_MOTOR = 31;
+
+        public static final int INTAKE_MOTOR_LEFT = 32;
+        public static final int INTAKE_MOTOR_RIGHT = 33;
+    }
+
+    public static final class PneumaticsConstants {
+        public static final int LEFT_SOLENOID_FORWARD = 1; 
+        public static final int LEFT_SOLENOID_REVERSE = 2; 
+        public static final int RIGHT_SOLENOID_FORWARD = 3; 
+        public static final int RIGHT_SOLENOID_REVERSE = 4;
     }
     /**
      * This class contains the drive constants
@@ -94,7 +98,6 @@ public final class Constants
         public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
 
         // Chassis configuration
-        // TODO: check and make sure these numbers are right cuz if they arent then uh oh stinky
         public static final double kTrackWidth = Units.inchesToMeters(28.5); // what is this number
         // Distance between centers of right and left wheels on robot
         public static final double kWheelBase = Units.inchesToMeters(23.5);
@@ -105,11 +108,11 @@ public final class Constants
             new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
             new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
-        // Angular offsets of the modules relative to the chassis in radians
-        /*public static final double kFrontLeftChassisAngularOffset = -Math.PI / 2;
-        public static final double kFrontRightChassisAngularOffset = 0;
-        public static final double kBackLeftChassisAngularOffset = Math.PI;
-        public static final double kBackRightChassisAngularOffset = Math.PI / 2;*/
+        // Default encoder offsets, in case preferences fails
+        public static final double frontLeftOffset = 0.0;//1.68753;
+        public static final double frontRightOffset = 0.0;//.279077;
+        public static final double backLeftOffset = 0;//3.17916;
+        public static final double backRightOffset = 0;
 
         public static final boolean kGyroReversed = false;
     } 
@@ -185,8 +188,10 @@ public final class Constants
     public static final class NeoMotorConstants {
         public static final double kFreeSpeedRpm = 5676;
 
-        public static final double homingSpeedCoarse = 0.075;
-        public static final double homingSpeedFine = 0.025;
+        public static final double HOMING_SPEED_COARSE = 0.075;
+        public static final double HOMING_SPEED_FINE = 0.025;
+
+        public static final double ARM_SPEED = 0.1;
     }
 
     public static final class LEDColors {
@@ -194,5 +199,18 @@ public final class Constants
         public static final double GREEN = 0.77;
         public static final double BLUE = 0.85;
         public static final double YELLOW = 0.69;
+    }
+
+    public static final class ArmConstants {
+        // TODO: find more accurate values for these
+        public static final double MAX_POSITION = 0.39;
+        public static final double MIN_POSITION = 0.0136;
+        public static final double RANGE = MAX_POSITION - MIN_POSITION;
+        
+        public static final double RELATIVE_ACCEPTABLE_MARGIN = 0.02;
+        public static final double FINE_SPEED_MARGIN = 0.1;
+
+        public static final double COARSE_SPEED = 0.35;
+        public static final double FINE_SPEED = 0.15;
     }
 }

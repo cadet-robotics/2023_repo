@@ -1,25 +1,23 @@
-package frc.robot.commands.controls.codriver;
+package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.RobotContainer;
 
 public class SetWheelLockStateCommand extends CommandBase {
-    private DriveSubsystem driveSubsystem;
+    private RobotContainer robotContainer;
     private boolean lockedState;
 
-    public SetWheelLockStateCommand(DriveSubsystem driveSubsystem, boolean lockedState) {
-        this.driveSubsystem = driveSubsystem;
+    public SetWheelLockStateCommand(RobotContainer robotContainer, boolean lockedState) {
+        this.robotContainer = robotContainer;
         this.lockedState = lockedState;
-
-        addRequirements(driveSubsystem);
     }
 
     @Override
     public void initialize() {
         System.out.printf("[WheelLockState] Set to %s\n", lockedState);
-        driveSubsystem.setDriveEnabled(!lockedState);
+        robotContainer.driveSubsystem.setDriveEnabled(!lockedState);
         if (lockedState) {
-            driveSubsystem.setX();
+            robotContainer.driveSubsystem.setX();
         }
     }
 

@@ -1,10 +1,11 @@
 package frc.robot.commands.homing;
 
 import com.revrobotics.CANSparkMax;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import frc.robot.Constants.NeoMotorConstants;
-import frc.robot.Constants.IOConstants.HomingController;
+import frc.robot.Constants.IOConstants.HomingControllerConsts;
 
 public class RotateWheelCommand extends CommandBase {
     private CANSparkMax motor; 
@@ -17,10 +18,10 @@ public class RotateWheelCommand extends CommandBase {
 
     @Override
     public void execute() {
-        if (homingController.button(HomingController.COARSE_HOMING_SPEED).getAsBoolean()) {
-            motor.set(NeoMotorConstants.homingSpeedCoarse);
+        if (homingController.button(HomingControllerConsts.COARSE_HOMING_SPEED).getAsBoolean()) {
+            motor.set(NeoMotorConstants.HOMING_SPEED_COARSE);
         } else {
-            motor.set(NeoMotorConstants.homingSpeedFine);
+            motor.set(NeoMotorConstants.HOMING_SPEED_FINE);
         }
     }
 

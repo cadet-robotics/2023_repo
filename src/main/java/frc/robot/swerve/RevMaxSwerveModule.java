@@ -51,6 +51,11 @@ public class RevMaxSwerveModule {
     m_drivingSparkMax.restoreFactoryDefaults();
     m_turningSparkMax.restoreFactoryDefaults();
 
+    // Enable voltage compensation to reduce potential brownouts
+    // TODO: move voltage compensations to constants file
+    m_turningSparkMax.enableVoltageCompensation(11);
+    m_drivingSparkMax.enableVoltageCompensation(10.5);
+
     // Setup encoders and PID controllers for the driving and turning SPARKS MAX.
     m_drivingEncoder = m_drivingSparkMax.getEncoder();
     m_turningEncoder = m_turningSparkMax.getAbsoluteEncoder(Type.kDutyCycle);

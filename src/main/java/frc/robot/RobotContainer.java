@@ -6,7 +6,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
-import edu.wpi.first.wpilibj.motorcontrol.VictorSP;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.IOConstants;
 import frc.robot.Constants.PWMConstants;
@@ -14,6 +13,7 @@ import frc.robot.controllers.CoDriverController;
 import frc.robot.controllers.DriverController;
 import frc.robot.controllers.HomingController;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 
@@ -33,6 +33,7 @@ public class RobotContainer
     public final ArmSubsystem armSubsystem;
     public final LEDSubsystem ledSubsystem;
     public final DriveSubsystem driveSubsystem;
+    public final ClawSubsystem clawSubsystem;
 
     // TODO: convert each type of controller into its own wrapper class, and get rid of this subsystem
     //private final ControlSubsystem controlSubsystem = new ControlSubsystem(driveSubsystem, ledSubsystem);
@@ -49,6 +50,7 @@ public class RobotContainer
         ledSubsystem = new LEDSubsystem(new PWMSparkMax(PWMConstants.LED_PWM));
         armSubsystem = new ArmSubsystem();
         driveSubsystem = new DriveSubsystem(this);
+        clawSubsystem = new ClawSubsystem(this);
 
         /*driverController.button(1).onTrue(Commands.runOnce(() -> {
 

@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.CANConstants;
@@ -42,5 +43,39 @@ public class ClawSubsystem extends SubsystemBase {
             PneumaticsConstants.RIGHT_SOLENOID_FORWARD,
             PneumaticsConstants.RIGHT_SOLENOID_REVERSE
         );
+    }
+
+    @Override
+    public void periodic() {
+        // TODO: make this into a command/formalize this
+        if (robotContainer.driverController.button(1).getAsBoolean()) {
+            setIntakeMotors(-0.4);
+        } else if (robotContainer.driverController.button(2).getAsBoolean()) {
+            setIntakeMotors(0.4);
+        } else {
+            setIntakeMotors(0);
+        }
+    }
+
+    public void setLeftSolenoid(Value value) {
+        leftSolenoid.set(value);
+    }
+
+    public void setRightSolenoid(Value value) {
+        rightSolenoid.set(value);
+    }
+
+    public void setClawShut(boolean shut) {
+        Value value = shut ? Value.kReverse : Value.kForward;
+        setLeftSolenoid(value);
+        setRightSolenoid(value);
+    }
+
+    /**
+     * @param speed -1.0 to 1.0, -1 being towards the robot and 1 being away
+     */
+    public void setIntakeMotors(double speed) {
+        intakeLeft.set(speed);
+        intakeRight.set(speed);
     }
 }

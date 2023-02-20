@@ -1,6 +1,5 @@
 package frc.robot.controllers;
 
-import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotContainer;
@@ -11,10 +10,21 @@ public class DriverController extends BaseController {
     }
 
     public void initBindings() {
-        button(1).whileTrue(new RunArmMotorTemp(robotContainer, false));
-        button(2).whileTrue(new RunArmMotorTemp(robotContainer, true));
-        button(3).whileTrue(new RunArmMotorTemp(robotContainer, false));
-        button(4).whileTrue(new RunArmMotorTemp(robotContainer, true));
+        // THIS IS ALL TEMPORARY; this will all (hopefully) be replaced
+        
+        // arm run thing
+        button(5).whileTrue(new RunArmMotorTemp(robotContainer, false));
+        button(6).whileTrue(new RunArmMotorTemp(robotContainer, true));
+
+        button(7).onTrue(Commands.runOnce(() -> {
+            robotContainer.clawSubsystem.setClawShut(true);
+        }));
+
+        button(8).onTrue(Commands.runOnce(() -> {
+            robotContainer.clawSubsystem.setClawShut(false);
+        }));
+
+
     }
 }
 
@@ -35,7 +45,7 @@ class RunArmMotorTemp extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-            robotContainer.armSubsystem.getMainMotor().set(0);
-            robotContainer.armSubsystem.getHelperMotor().set(0);
+        robotContainer.armSubsystem.getMainMotor().set(0);
+        robotContainer.armSubsystem.getHelperMotor().set(0);
     }
 }

@@ -5,12 +5,11 @@ import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
-import edu.wpi.first.wpilibj.PS4Controller;
-import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.CANConstants;
+import frc.robot.commands.arm.SetArmToPositionCommand;
 
 public class ArmSubsystem extends SubsystemBase {
     public CANSparkMax mainMotor = new CANSparkMax(CANConstants.ARM_MAIN_MOTOR, MotorType.kBrushless);
@@ -21,6 +20,11 @@ public class ArmSubsystem extends SubsystemBase {
     public CANSparkMax getMainMotor() { return mainMotor; }
     public CANSparkMax getHelperMotor() { return helperMotor; }
     public SparkMaxAbsoluteEncoder getEncoder() { return encoder; }
+
+    public ArmSubsystem() {
+        mainMotor.enableVoltageCompensation(11);
+        helperMotor.enableVoltageCompensation(11);
+    }
 
     // TODO: check if they need to be inverted
     public ArmSubsystem setMotors(double speedPWM) {

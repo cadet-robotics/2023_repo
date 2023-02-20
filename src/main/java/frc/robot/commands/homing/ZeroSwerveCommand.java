@@ -12,6 +12,7 @@ public class ZeroSwerveCommand extends CommandBase {
 
     @Override
     public void initialize() {
+        System.out.println("[WARN] Swerve has been zerod! Robot must be restarted to acknowledge offsets!");
         driveSubsystem.setModuleZeros();
     }
 

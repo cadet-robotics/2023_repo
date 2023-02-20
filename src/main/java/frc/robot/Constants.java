@@ -48,7 +48,7 @@ public final class Constants
 
             public static final int COARSE_HOMING_SPEED = 7; // LT
 
-            public static final int ZERO_SWERVE_MODULES = 8; // RT
+            public static final int ZERO_SWERVE_MODULES = 8; // RT      
             
             public static final int EXIT_HOMING_MODE = 9; // back
             public static final int INSERT_HOMING_MODE = 10; // start
@@ -81,9 +81,9 @@ public final class Constants
     }
 
     public static final class PneumaticsConstants {
-        public static final int LEFT_SOLENOID_FORWARD = 1; 
-        public static final int LEFT_SOLENOID_REVERSE = 2; 
-        public static final int RIGHT_SOLENOID_FORWARD = 3; 
+        public static final int LEFT_SOLENOID_FORWARD = 5; 
+        public static final int LEFT_SOLENOID_REVERSE = 3; 
+        public static final int RIGHT_SOLENOID_FORWARD = 6; 
         public static final int RIGHT_SOLENOID_REVERSE = 4;
     }
 
@@ -182,7 +182,7 @@ public final class Constants
     public static final class NeoMotorConstants {
         public static final double kFreeSpeedRpm = 5676;
 
-        public static final double HOMING_SPEED_COARSE = 0.075;
+        public static final double HOMING_SPEED_COARSE = 0.15;
         public static final double HOMING_SPEED_FINE = 0.025;
 
         public static final double ARM_SPEED = 0.1;
@@ -201,10 +201,24 @@ public final class Constants
         public static final double MIN_POSITION = 0.0136;
         public static final double RANGE = MAX_POSITION - MIN_POSITION;
         
-        public static final double RELATIVE_ACCEPTABLE_MARGIN = 0.02;
+        // relative position of the arm when it is fully vertical
+        public static final double FULL_DOWN_POSITION = 0.1036;
+
+        // The downward position where the intake has to close in order to retract the arm all the way in
+        // This position is RELATIVE
+        public static final double INTAKE_RETRACT_POSITION = 0.07;
+
+        public static final double RELATIVE_ACCEPTABLE_MARGIN = 0.075;
         public static final double FINE_SPEED_MARGIN = 0.1;
 
-        public static final double COARSE_SPEED = 0.35;
-        public static final double FINE_SPEED = 0.15;
+        public static final double COARSE_SPEED_UP = 0.35;
+        public static final double COARSE_SPEED_DOWN = 0.2;
+        public static final double FINE_SPEED_UP = 0.08;
+        public static final double FINE_SPEED_DOWN = 0.00;
+
+        public static final double REVERSE_SPEED_ADDITION = 0.01;
+
+        public static final double LOCKING_SPEED = 0.25;
+        public static final double LOCKING_MARGIN = 0.005;
     }
 }

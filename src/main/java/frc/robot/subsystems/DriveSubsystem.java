@@ -9,7 +9,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -18,6 +18,7 @@ import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveCANConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.TeleOpDriveCommand;
+import frc.robot.commands.arm.SetArmToPositionCommand;
 import frc.robot.swerve.RevMaxSwerveModule;
 
 /**
@@ -31,6 +32,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     private boolean driveEnabled = true;
     public boolean homingMode = false; // TODO: get rid of this
+    public boolean headlessMode = true;
 
     private PeriodicCounter debugCounter = new PeriodicCounter(10);
 
@@ -50,7 +52,7 @@ public class DriveSubsystem extends SubsystemBase {
         public static final RevMaxSwerveModule m_frontRight = new RevMaxSwerveModule(
             DriveCANConstants.kFrontRightDrivingCanId,
             DriveCANConstants.kFrontRightTurningCanId,
-             Preferences.getDouble("swerveFrontRightOffset", 0.0));
+            Preferences.getDouble("swerveFrontRightOffset", 0.0));
         public static final RevMaxSwerveModule m_backLeft = new RevMaxSwerveModule(
             DriveCANConstants.kRearLeftDrivingCanId,
             DriveCANConstants.kRearLeftTurningCanId,

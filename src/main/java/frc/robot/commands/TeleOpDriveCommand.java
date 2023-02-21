@@ -31,7 +31,7 @@ public class TeleOpDriveCommand extends CommandBase {
         y *= DRIVE_SPEED;
         z *= DRIVE_SPEED;
 
-        driveSubsystem.drive(x, y, z, false);
+        driveSubsystem.drive(x, y, z, true, true);
 
         // debug data
         // TODO: fix the raw axis outputs to match the drive method

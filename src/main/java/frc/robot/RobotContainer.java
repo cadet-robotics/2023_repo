@@ -5,6 +5,9 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.IOConstants;
@@ -69,7 +72,13 @@ public class RobotContainer
      */
     public Command getAutonomousCommand()
     {
-        return null;
+        return driveSubsystem.followTrajectoryCommand(
+            PathPlanner.loadPath(
+                "basic-path-1",
+                new PathConstraints(3, 1)
+            ),
+            true
+        );
         // An example command will be run in autonomous
         //return Autos.exampleAuto(exampleSubsystem);
     }

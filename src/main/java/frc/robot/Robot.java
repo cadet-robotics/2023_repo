@@ -5,6 +5,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -36,14 +37,15 @@ public class Robot extends TimedRobot
         robotContainer = new RobotContainer();
 
         // TURN OFF LIMELIGHT: IT IS BRIGHTER THAN THE SUN
-        //SmartDashboard.
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(1);
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
     }
     
     
     /**
      * This method is called every 20 ms, no matter the mode. Use this for items like diagnostics
      * that you want ran during disabled, autonomous, teleoperated and test.
-     *
+     *  
      * <p>This runs after the mode specific periodic methods, but before LiveWindow and
      * SmartDashboard integrated updating.
      */
@@ -56,14 +58,14 @@ public class Robot extends TimedRobot
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
 
-        // TODO: remove this; temporary
-        if (SetArmToPositionCommand.global != null) {
+        // TODO: remove this; temporary 
+        /*if (SetArmToPositionCommand.global != null) {
             if (robotContainer.codriverController.povUp().getAsBoolean()) {
                 SetArmToPositionCommand.global.desiredPosition += 0.005;
             } else if (robotContainer.codriverController.povDown().getAsBoolean()) {
                 SetArmToPositionCommand.global.desiredPosition -= 0.005;
             }
-        }
+        }*/
     }
     
     

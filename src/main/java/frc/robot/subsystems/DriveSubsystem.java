@@ -1,7 +1,10 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -13,9 +16,13 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.PeriodicCounter;
 import frc.robot.RobotContainer;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveCANConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.TeleOpDriveCommand;
@@ -70,7 +77,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     private SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(
         DriveConstants.kDriveKinematics,
-        Rotation2d.fromDegrees(m_ahrs.getAngle()),
+        m_ahrs.getRotation2d(),
         buildSwerveModulePositions()
     );
 
@@ -129,7 +136,7 @@ public class DriveSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         m_odometry.update(
-            Rotation2d.fromDegrees(m_ahrs.getAngle()),
+            m_ahrs.getRotation2d(),
             buildSwerveModulePositions()
         );
 
@@ -180,7 +187,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     public void resetOdometry(Pose2d pose) {
         m_odometry.resetPosition(
-            Rotation2d.fromDegrees(m_ahrs.getAngle()),
+            m_ahrs.getRotation2d(),
             buildSwerveModulePositions(),
             pose
         );
@@ -191,6 +198,10 @@ public class DriveSubsystem extends SubsystemBase {
      * @return Success value of this operation
      */
     public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
+        if (!driveEnabled) {
+            return;
+        }
+
         double xSpeedCommanded;
         double ySpeedCommanded;
     
@@ -323,5 +334,25 @@ public class DriveSubsystem extends SubsystemBase {
 
         double backLeftOffset = SwerveModules.m_backLeft.getState().angle.getRadians() + this.m_backLeftOffset;
         Preferences.setDouble("swerveBackLeftOffset", backLeftOffset);
+    }
+
+    public Command followTrajectoryCommand(PathPlannerTrajectory path, boolean isFirstPath) {
+        return new SequentialCommandGroup(
+            new InstantCommand(() -> {
+                if (isFirstPath) {
+                    this.resetOdometry(path.getInitialHolonomicPose());
+                }
+            }),
+            new PPSwerveControllerCommand(
+                path,
+                this::getPose,
+                DriveConstants.kDriveKinematics,
+                new PIDController(0, 0, 0),
+                new PIDController(0, 0, 0),
+                new PIDController(0, 0, 0),
+                this::setModuleStates,
+                true
+            )
+        );
     }
 }

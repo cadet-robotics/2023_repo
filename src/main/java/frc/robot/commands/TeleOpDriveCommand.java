@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.IOConstants.DriverControllerConsts;
 import frc.robot.controllers.DriverController;
 import frc.robot.subsystems.DriveSubsystem;
@@ -24,12 +25,11 @@ public class TeleOpDriveCommand extends CommandBase {
         y = y < DriverControllerConsts.DEADZONE && y > -1 * DriverControllerConsts.DEADZONE ? 0 : y;
         z = z < DriverControllerConsts.DEADZONE && z > -1 * DriverControllerConsts.DEADZONE ? 0 : z;
 
-        // speed (TEMPORARY; TODO: remove this for comp, warehouse only code)
-        final double DRIVE_SPEED = 0.75;
-
-        x *= DRIVE_SPEED;
-        y *= DRIVE_SPEED;
-        z *= DRIVE_SPEED;
+        if (driverController.getRawAxis(DriverControllerConsts.FINE_CONTROL_AXIS) >= DriverControllerConsts.FINE_CONTOL_THRESHOLD) {
+            x *= DriveConstants.FINE_SPEED_REDUCTION;
+            y *= DriveConstants.FINE_SPEED_REDUCTION;
+            z *= DriveConstants.FINE_SPEED_REDUCTION;
+        }
 
         driveSubsystem.drive(x, y, z, true, true);
 

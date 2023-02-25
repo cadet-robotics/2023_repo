@@ -39,6 +39,8 @@ public class SetArmToPositionCommand extends CommandBase {
     public void initialize() {
         if (desiredPosition < ArmConstants.INTAKE_RETRACT_POSITION) {
             clawSubsystem.setClawShut(true);
+        } else if (armSubsystem.getRelativePosition() < ArmConstants.INTAKE_RETRACT_POSITION) {
+            clawSubsystem.setClawShut(true);
         }
     }
 

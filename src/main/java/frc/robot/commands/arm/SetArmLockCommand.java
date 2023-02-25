@@ -23,6 +23,11 @@ public class SetArmLockCommand extends CommandBase {
     }
 
     @Override
+    public void execute() {
+        //System.out.printf("Encoder: %s, Goal: %s\n", encoder.getPosition(), ArmConstants.MIN_POSITION + ArmConstants.LOCKING_MARGIN);
+    }
+
+    @Override
     public void initialize() {
         clawSubsystem.setClawShut(true);
         armSubsystem.setMotors(ArmConstants.LOCKING_SPEED);

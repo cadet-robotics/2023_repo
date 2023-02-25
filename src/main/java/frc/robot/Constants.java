@@ -21,15 +21,32 @@ public final class Constants
         public static final int HOMING_CONTROLLER_PORT = 2;
 
         // driver controller
+        // TODO: move zero heading control from homing to driver/codriver
         public static final class DriverControllerConsts {
             public static final double DEADZONE = 0.05;
+
+            public static final int FINE_CONTROL_AXIS = 3; // Right trigger
+            public static final double FINE_CONTOL_THRESHOLD = 0.2;
         }
 
         // codriver controller
         public static final class CoDriverControllerConsts {
-            public static final int WHEEL_LOCK_BUTTON = 7;
-            public static final int WHEEL_UNLOCK_BUTTON = 8;
+            public static final int CLAW_CLOSE_BUTTON = 7; // back
+            public static final int CLAW_OPEN_BUTTON = 8; // start
 
+            public static final int WHEEL_LOCK_BUTTON = 9; // left joystick in
+            public static final int WHEEL_UNLOCK_BUTTON = 10; // right joystick in
+
+            public static final int ARM_MANUAL_DOWN = 5; // left button
+            public static final int ARM_MANUAL_UP = 6; // right button
+
+            public static final int CLAW_SUCK = 1; // A
+            public static final int CLAW_VOMIT = 2; // B
+
+            public static final int ARM_LOCK = 4; // Y
+
+            public static final int LED_MODIFIER_AXIS = 3;
+            public static final double LED_MODIFIER_THRESHOLD = 0.2;
             public static final int GREEN_LIGHT = 1; // A
             public static final int RED_LIGHT = 2; // B
             public static final int BLUE_LIGHT = 3; // X
@@ -90,12 +107,12 @@ public final class Constants
     public static final class DriveConstants {
         // Driving Parameters - Note that these are not the maximum capable speeds of
         // the robot, rather the allowed maximum speeds
-        public static final double kMaxSpeedMetersPerSecond = 4.8; // 4.8
-        public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
+        public static final double kMaxSpeedMetersPerSecond = 3; // 4.8
+        public static final double kMaxAngularSpeed = 1.5 * Math.PI; // radians per second
 
-        public static final double kDirectionSlewRate = 1.4; // radians per second  // original 1.2
-        public static final double kMagnitudeSlewRate = 1.8; // percent per second (1 = 100%) // 1.8
-        public static final double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)
+        public static final double kDirectionSlewRate = 2.0; // radians per second  // original 1.2
+        public static final double kMagnitudeSlewRate = 5.0; // percent per second (1 = 100%) // 1.8
+        public static final double kRotationalSlewRate = 5.0; // percent per second (1 = 100%) // 2.0
 
         // Chassis configuration
         public static final double kTrackWidth = Units.inchesToMeters(28.5); // what is this number
@@ -115,6 +132,8 @@ public final class Constants
         public static final double backRightOffset = 0;
 
         public static final boolean kGyroReversed = false;
+
+        public static final double FINE_SPEED_REDUCTION = 0.3;
     } 
     
     public static final class ModuleConstants {
@@ -201,8 +220,8 @@ public final class Constants
 
     public static final class ArmConstants {
         // TODO: find more accurate values for these
-        public static final double MAX_POSITION = 0.39;
-        public static final double MIN_POSITION = 0.0136;
+        public static final double MAX_POSITION = 0.3901;
+        public static final double MIN_POSITION = 0.015573590993881226;
         public static final double RANGE = MAX_POSITION - MIN_POSITION;
         
         // relative position of the arm when it is fully vertical
@@ -223,6 +242,20 @@ public final class Constants
         public static final double REVERSE_SPEED_ADDITION = 0.01;
 
         public static final double LOCKING_SPEED = 0.25;
-        public static final double LOCKING_MARGIN = 0.001;
+        public static final double LOCKING_MARGIN = 0.0005;
+
+        public static final double MANUAL_ARM_SPEED = 0.4;
+
+        // arm preset positions
+        public static final double[] ARM_PRESET_POSITIONS = {
+            0.2,
+            0.5,
+            0.7,
+            0.95
+        };
+    }
+
+    public static final class ClawConstants {
+        public static final double INTAKE_SPEED = 0.4;
     }
 }

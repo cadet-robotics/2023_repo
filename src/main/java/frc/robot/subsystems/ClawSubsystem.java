@@ -45,18 +45,6 @@ public class ClawSubsystem extends SubsystemBase {
         );
     }
 
-    @Override
-    public void periodic() {
-        // TODO: make this into a command/formalize this
-        if (robotContainer.driverController.button(1).getAsBoolean()) {
-            setIntakeMotors(-0.4);
-        } else if (robotContainer.driverController.button(2).getAsBoolean()) {
-            setIntakeMotors(0.4);
-        } else {
-            setIntakeMotors(0);
-        }
-    }
-
     public void setLeftSolenoid(Value value) {
         leftSolenoid.set(value);
     }

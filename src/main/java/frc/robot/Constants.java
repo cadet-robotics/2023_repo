@@ -242,6 +242,7 @@ public final class Constants
         public static final double REVERSE_SPEED_ADDITION = 0.01;
 
         public static final double LOCKING_SPEED = 0.25;
+        public static final double FINE_LOCKING_SPEED = 0.1;
         public static final double LOCKING_MARGIN = 0.0005;
 
         public static final double MANUAL_ARM_SPEED = 0.4;

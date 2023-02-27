@@ -1,19 +1,17 @@
 package frc.robot.controllers;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.LEDColors;
 import frc.robot.Constants.IOConstants.CoDriverControllerConsts;
-import frc.robot.Constants.IOConstants.DriverControllerConsts;
 import frc.robot.commands.SetLightValueCommand;
 import frc.robot.commands.SetWheelLockStateCommand;
 import frc.robot.commands.arm.ManualArmDriveCommand;
 import frc.robot.commands.arm.SetArmLockCommand;
 import frc.robot.commands.arm.SetArmToPositionCommand;
 import frc.robot.commands.claw.RunClawMotorCommand;
-import frc.robot.subsystems.ArmSubsystem;
 
 public class CoDriverController extends BaseController {
     public CoDriverController(int port, RobotContainer robotContainer) {
@@ -63,6 +61,17 @@ public class CoDriverController extends BaseController {
             .negate()
             .and(button(CoDriverControllerConsts.CLAW_VOMIT))
             .whileTrue(new RunClawMotorCommand(robotContainer.clawSubsystem, false));
+
+        // cancels arm command
+        axisGreaterThan(CoDriverControllerConsts.LED_MODIFIER_AXIS, CoDriverControllerConsts.LED_MODIFIER_THRESHOLD)
+            .negate()
+            .and(button(CoDriverControllerConsts.CANCEL_ARM_COMMAND))
+            .onTrue(Commands.runOnce(() -> {
+                Command activeCommand = robotContainer.armSubsystem.getCurrentCommand();
+                if (activeCommand != null) {
+                    activeCommand.cancel();
+                }
+            }));
 
         // claw open/close
         button(CoDriverControllerConsts.CLAW_CLOSE_BUTTON).onTrue(Commands.runOnce(() -> {

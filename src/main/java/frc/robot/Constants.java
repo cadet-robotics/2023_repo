@@ -42,6 +42,8 @@ public final class Constants
 
             public static final int CLAW_SUCK = 1; // A
             public static final int CLAW_VOMIT = 2; // B
+            
+            public static final int CANCEL_ARM_COMMAND = 3; // X
 
             public static final int ARM_LOCK = 4; // Y
 

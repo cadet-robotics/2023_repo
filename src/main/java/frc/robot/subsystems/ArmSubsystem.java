@@ -6,13 +6,9 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.CANConstants;
-import frc.robot.commands.arm.SetArmToPositionCommand;
 
 public class ArmSubsystem extends SubsystemBase {
     public CANSparkMax mainMotor = new CANSparkMax(CANConstants.ARM_MAIN_MOTOR, MotorType.kBrushless);

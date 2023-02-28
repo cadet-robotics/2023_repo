@@ -20,8 +20,8 @@ public class CoDriverController extends BaseController {
 
     private SetArmToPositionCommand getArmHoldSwitch(double desiredPosition) {
         return new SetArmToPositionCommand(
-            robotContainer.clawSubsystem, 
-            robotContainer.armSubsystem, 
+            robotContainer.clawSubsystem,
+            robotContainer.armSubsystem,
             desiredPosition,
             true
         );

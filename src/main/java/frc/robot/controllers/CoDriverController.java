@@ -11,6 +11,8 @@ import frc.robot.commands.arm.ManualArmDriveCommand;
 import frc.robot.commands.arm.SetArmLockCommand;
 import frc.robot.commands.arm.SetArmToPositionCommand;
 import frc.robot.commands.claw.RunClawMotorCommand;
+import frc.robot.commands.controller.JoystickClawMotorCommand;
+import frc.robot.commands.controller.JoystickMoveArmCommand;
 import frc.robot.commands.drive.SetWheelLockStateCommand;
 
 public class CoDriverController extends BaseController {
@@ -51,28 +53,6 @@ public class CoDriverController extends BaseController {
             .and(button(CoDriverControllerConsts.YELLOW_LIGHT))
             .onTrue(new SetLightValueCommand(robotContainer.ledSubsystem, LEDColors.YELLOW));
 
-        // intake motors
-        axisGreaterThan(CoDriverControllerConsts.LED_MODIFIER_AXIS, CoDriverControllerConsts.LED_MODIFIER_THRESHOLD)
-            .negate()
-            .and(button(CoDriverControllerConsts.CLAW_SUCK))
-            .whileTrue(new RunClawMotorCommand(robotContainer.clawSubsystem, true));
-
-        axisGreaterThan(CoDriverControllerConsts.LED_MODIFIER_AXIS, CoDriverControllerConsts.LED_MODIFIER_THRESHOLD)
-            .negate()
-            .and(button(CoDriverControllerConsts.CLAW_VOMIT))
-            .whileTrue(new RunClawMotorCommand(robotContainer.clawSubsystem, false));
-
-        // cancels arm command
-        axisGreaterThan(CoDriverControllerConsts.LED_MODIFIER_AXIS, CoDriverControllerConsts.LED_MODIFIER_THRESHOLD)
-            .negate()
-            .and(button(CoDriverControllerConsts.CANCEL_ARM_COMMAND))
-            .onTrue(Commands.runOnce(() -> {
-                Command activeCommand = robotContainer.armSubsystem.getCurrentCommand();
-                if (activeCommand != null) {
-                    activeCommand.cancel();
-                }
-            }));
-
         // claw open/close
         button(CoDriverControllerConsts.CLAW_CLOSE_BUTTON).onTrue(Commands.runOnce(() -> {
             robotContainer.clawSubsystem.setClawShut(true);
@@ -83,17 +63,47 @@ public class CoDriverController extends BaseController {
         }));
 
         // manual arm drive
-        button(CoDriverControllerConsts.ARM_MANUAL_UP).whileTrue(
-            new ManualArmDriveCommand(robotContainer.armSubsystem, true)
+        axisGreaterThan(CoDriverControllerConsts.ARM_MANUAL_AXIS, CoDriverControllerConsts.ARM_MANUAL_DEADZONE)
+            .whileTrue(new JoystickMoveArmCommand(
+                robotContainer.armSubsystem,
+                this,
+                false
+            )
         );
-        button(CoDriverControllerConsts.ARM_MANUAL_DOWN).whileTrue(
-            new ManualArmDriveCommand(robotContainer.armSubsystem, false)
+        axisLessThan(CoDriverControllerConsts.ARM_MANUAL_AXIS, -1 * CoDriverControllerConsts.ARM_MANUAL_DEADZONE)
+            .whileTrue(new JoystickMoveArmCommand(
+                robotContainer.armSubsystem,
+                this,
+                false
+            )
         );
 
+        // claw intake motors
+        axisGreaterThan(CoDriverControllerConsts.CLAW_MANUAL_AXIS, CoDriverControllerConsts.CLAW_MANUAL_DEADZONE)
+            .whileTrue(new JoystickClawMotorCommand(
+                robotContainer.clawSubsystem,
+                this,
+                true
+            )
+        );
+        axisLessThan(CoDriverControllerConsts.CLAW_MANUAL_AXIS, -1 * CoDriverControllerConsts.CLAW_MANUAL_DEADZONE)
+            .whileTrue(new JoystickClawMotorCommand(
+                robotContainer.clawSubsystem,
+                this,
+                true
+            )
+        );
+        
         // set arm to fixed position
         pov(0).onTrue(getArmHoldSwitch(ArmConstants.ARM_PRESET_POSITIONS[2]));
         pov(90).onTrue(getArmHoldSwitch(ArmConstants.ARM_PRESET_POSITIONS[1]));
         pov(180).onTrue(getArmHoldSwitch(ArmConstants.ARM_PRESET_POSITIONS[0]));
+        pov(270).onTrue(Commands.runOnce(() -> {
+            Command activeCommand = robotContainer.armSubsystem.getCurrentCommand();
+            if (activeCommand != null) {
+                activeCommand.cancel();
+            }
+        }));
 
         // locks arm in robot
         button(CoDriverControllerConsts.ARM_LOCK).onTrue(new SetArmLockCommand(

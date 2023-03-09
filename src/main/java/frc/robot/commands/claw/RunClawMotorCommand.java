@@ -15,7 +15,7 @@ public class RunClawMotorCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        clawSubsystem.setIntakeMotors(ClawConstants.INTAKE_SPEED * (suck ? -1 : 1));
+        clawSubsystem.setIntakeMotors(ClawConstants.INTAKE_SPEED_MAX * (suck ? -1 : 1));
     }
 
     @Override

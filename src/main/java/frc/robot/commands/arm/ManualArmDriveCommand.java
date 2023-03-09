@@ -17,7 +17,7 @@ public class ManualArmDriveCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        armSubsystem.setMotors(ArmConstants.MANUAL_ARM_SPEED * (inverse ? - 1 : 1));
+        armSubsystem.setMotors(ArmConstants.MANUAL_ARM_SPEED_MAX * (inverse ? -1 : 1));
     }
 
     @Override

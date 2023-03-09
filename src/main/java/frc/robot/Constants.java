@@ -23,7 +23,7 @@ public final class Constants
         // driver controller
         // TODO: move zero heading control from homing to driver/codriver
         public static final class DriverControllerConsts {
-            public static final double DEADZONE = 0.04;
+            public static final double DEADZONE = 0.065;
 
             public static final int LEFT_JOYSTICK_X = 0;
             public static final int LEFT_JOYSTICK_Y = 1;
@@ -33,6 +33,7 @@ public final class Constants
             public static final int FINE_CONTROL_AXIS = 4; // Right trigger
             public static final double FINE_CONTOL_THRESHOLD = 0.2;
 
+            // TODO: remap this to digital signal
             public static final int HEADED_MODE_AXIS = 3;
             public static final double HEADED_MODE_THRESHOLD = 0.2;
 
@@ -47,28 +48,28 @@ public final class Constants
 
         // codriver controller
         public static final class CoDriverControllerConsts {
-            public static final int CLAW_CLOSE_BUTTON = 7; // back
-            public static final int CLAW_OPEN_BUTTON = 8; // start
+            public static final int CLAW_CLOSE_BUTTON = 5; // L1
+            public static final int CLAW_OPEN_BUTTON = 6; // R1
 
-            public static final int WHEEL_LOCK_BUTTON = 9; // left joystick in
-            public static final int WHEEL_UNLOCK_BUTTON = 10; // right joystick in
+            public static final int WHEEL_LOCK_BUTTON = 13; // ps4 logo button
+            public static final int WHEEL_UNLOCK_BUTTON = 14; // touchpad button in
 
-            public static final int ARM_MANUAL_DOWN = 5; // left button
-            public static final int ARM_MANUAL_UP = 6; // right button
+            public static final int ARM_LOCK = 4; // Triangle
 
-            public static final int CLAW_SUCK = 1; // A
-            public static final int CLAW_VOMIT = 2; // B
-            
-            public static final int CANCEL_ARM_COMMAND = 3; // X
-
-            public static final int ARM_LOCK = 4; // Y
-
-            public static final int LED_MODIFIER_AXIS = 3;
+            // TODO: remove LED code, cuz we let the magic smoke out of it
+            // TODO: switch analog RT to digital RT
+            public static final int LED_MODIFIER_AXIS = 4;
             public static final double LED_MODIFIER_THRESHOLD = 0.2;
             public static final int GREEN_LIGHT = 1; // A
             public static final int RED_LIGHT = 2; // B
             public static final int BLUE_LIGHT = 3; // X
             public static final int YELLOW_LIGHT = 4; // Y
+
+            public static final int ARM_MANUAL_AXIS = 5; // right Y axis
+            public static final double ARM_MANUAL_DEADZONE = 0.10;
+
+            public static final int CLAW_MANUAL_AXIS = 1; // left Y axis
+            public static final double CLAW_MANUAL_DEADZONE = 0.10;
         }
 
         // homing controller
@@ -274,7 +275,7 @@ public final class Constants
         public static final double FINE_LOCKING_SPEED = 0.25;
         public static final double LOCKING_MARGIN = 0.0005;
 
-        public static final double MANUAL_ARM_SPEED = 0.4;
+        public static final double MANUAL_ARM_SPEED_MAX = 0.4;
 
         // arm preset positions
         public static final double[] ARM_PRESET_POSITIONS = {
@@ -285,6 +286,6 @@ public final class Constants
     }
 
     public static final class ClawConstants {
-        public static final double INTAKE_SPEED = 0.2; // TODO: check the tuning of this value
+        public static final double INTAKE_SPEED_MAX = 0.2; // TODO: check the tuning of this value
     }
 }

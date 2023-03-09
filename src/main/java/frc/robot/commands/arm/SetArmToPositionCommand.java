@@ -17,6 +17,8 @@ public class SetArmToPositionCommand extends CommandBase {
     public double desiredPosition;
     private final boolean hold;
 
+    private int ticksBeforeExecute = 0;
+
     /**
      * @param desiredPosition a relative value from 0-1
      * @param hold Whether or not to hold the arm in place once the position is reached
@@ -41,11 +43,17 @@ public class SetArmToPositionCommand extends CommandBase {
             clawSubsystem.setClawShut(true);
         } else if (armSubsystem.getRelativePosition() < ArmConstants.INTAKE_RETRACT_POSITION) {
             clawSubsystem.setClawShut(true);
+            ticksBeforeExecute = ArmConstants.WAIT_TICKS;
         }
     }
 
     @Override
     public void execute() {
+        if (ticksBeforeExecute > 0) {
+            ticksBeforeExecute--;
+            return;
+        }
+
         double relativePos = armSubsystem.getRelativePosition();
         boolean desiresUpward = relativePos < desiredPosition;
         boolean fineSpeed = (relativePos > desiredPosition - ArmConstants.FINE_SPEED_MARGIN &&

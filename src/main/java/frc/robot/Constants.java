@@ -23,10 +23,26 @@ public final class Constants
         // driver controller
         // TODO: move zero heading control from homing to driver/codriver
         public static final class DriverControllerConsts {
-            public static final double DEADZONE = 0.05;
+            public static final double DEADZONE = 0.04;
 
-            public static final int FINE_CONTROL_AXIS = 3; // Right trigger
+            public static final int LEFT_JOYSTICK_X = 0;
+            public static final int LEFT_JOYSTICK_Y = 1;
+            public static final int RIGHT_JOYSTICK_X = 2;
+
+            // TODO: remap this to digital signal
+            public static final int FINE_CONTROL_AXIS = 4; // Right trigger
             public static final double FINE_CONTOL_THRESHOLD = 0.2;
+
+            public static final int HEADED_MODE_AXIS = 3;
+            public static final double HEADED_MODE_THRESHOLD = 0.2;
+
+            public static final int ZERO_HEADING_BUTTON = 4; // Triangle
+
+            //public static final int SET_HEADED_MODE = 7;
+            //public static final int SET_HEADLESS_MODE = 8;
+
+            public static final int BEGIN_AUTO_LEVEL_1 = 5;
+            public static final int BEGIN_AUTO_LEVEL_2 = 6;
         }
 
         // codriver controller
@@ -90,6 +106,10 @@ public final class Constants
     public static final class PWMConstants {
         public static final int LED_PWM = 0;
     }
+
+    public static final class AnalogConstants {
+        public static final int DISTANCE_SENSOR = 0;
+    }
     
     public static final class CANConstants {
         public static final int ARM_MAIN_MOTOR = 30;
@@ -109,8 +129,8 @@ public final class Constants
     public static final class DriveConstants {
         // Driving Parameters - Note that these are not the maximum capable speeds of
         // the robot, rather the allowed maximum speeds
-        public static final double kMaxSpeedMetersPerSecond = 3; // 4.8
-        public static final double kMaxAngularSpeed = 1.5 * Math.PI; // radians per second
+        public static final double kMaxSpeedMetersPerSecond = 4.8; // 4.8
+        public static final double kMaxAngularSpeed = 1.75 * Math.PI; // radians per second
 
         public static final double kDirectionSlewRate = 2.0; // radians per second  // original 1.2
         public static final double kMagnitudeSlewRate = 5.0; // percent per second (1 = 100%) // 1.8
@@ -136,6 +156,11 @@ public final class Constants
         public static final boolean kGyroReversed = false;
 
         public static final double FINE_SPEED_REDUCTION = 0.3;
+
+        public static final double GYRO_PITCH = -42.25;
+
+        public static final double AUTO_LEVEL_APPROACH_SPEED = 0.2 * 0.006;
+        public static final double AUTO_LEVEL_ANGULAR_MARGIN = 5;
     } 
     
     public static final class ModuleConstants {
@@ -232,8 +257,10 @@ public final class Constants
         // The downward position where the intake has to close in order to retract the arm all the way in
         // This position is RELATIVE
         public static final double INTAKE_RETRACT_POSITION = 0.07;
+        
+        public static final int WAIT_TICKS = 25;
 
-        public static final double RELATIVE_ACCEPTABLE_MARGIN = 0.075;
+        public static final double RELATIVE_ACCEPTABLE_MARGIN = 0.05;
         public static final double FINE_SPEED_MARGIN = 0.1;
 
         public static final double COARSE_SPEED_UP = 0.35;
@@ -243,8 +270,8 @@ public final class Constants
 
         public static final double REVERSE_SPEED_ADDITION = 0.01;
 
-        public static final double LOCKING_SPEED = 0.25;
-        public static final double FINE_LOCKING_SPEED = 0.1;
+        public static final double LOCKING_SPEED = 0.275;
+        public static final double FINE_LOCKING_SPEED = 0.25;
         public static final double LOCKING_MARGIN = 0.0005;
 
         public static final double MANUAL_ARM_SPEED = 0.4;
@@ -252,13 +279,12 @@ public final class Constants
         // arm preset positions
         public static final double[] ARM_PRESET_POSITIONS = {
             0.2,
-            0.5,
-            0.7,
+            0.78,
             0.95
         };
     }
 
     public static final class ClawConstants {
-        public static final double INTAKE_SPEED = 0.4;
+        public static final double INTAKE_SPEED = 0.2; // TODO: check the tuning of this value
     }
 }

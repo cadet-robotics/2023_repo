@@ -39,6 +39,7 @@ public class Robot extends TimedRobot
         // TURN OFF LIMELIGHT: IT IS BRIGHTER THAN THE SUN
         NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(1);
         NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(0);
     }
     
     
@@ -57,12 +58,17 @@ public class Robot extends TimedRobot
         // and running subsystem periodic() methods.  This must be called from the robot's periodic
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
+
+        SmartDashboard.putNumber("distanceSensorCm", robotContainer.distanceSensor.getDistanceCm());
+        SmartDashboard.putBoolean("distanceSensor", robotContainer.distanceSensor.isWithinRange(0, 50));
     }
     
     
     /** This method is called once each time the robot enters Disabled mode. */
     @Override
-    public void disabledInit() {}
+    public void disabledInit() {
+
+    }
     
     
     @Override

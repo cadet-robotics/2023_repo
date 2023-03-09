@@ -1,6 +1,5 @@
-package frc.robot.commands;
+package frc.robot.commands.drive;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.IOConstants.DriverControllerConsts;
@@ -20,7 +19,9 @@ public class TeleOpDriveCommand extends CommandBase {
     public void execute() {
         // drive robot
         // TODO: change the fieldRelative field from false to a configurable/constant
-        double x = driverController.getLeftY(), y = driverController.getLeftX(), z = driverController.getRawAxis(4);
+        double x = driverController.getRawAxis(DriverControllerConsts.LEFT_JOYSTICK_Y),
+            y = driverController.getRawAxis(DriverControllerConsts.LEFT_JOYSTICK_X),
+            z = driverController.getRawAxis(DriverControllerConsts.RIGHT_JOYSTICK_X);
         x = x < DriverControllerConsts.DEADZONE && x > -1 * DriverControllerConsts.DEADZONE ? 0 : x;
         y = y < DriverControllerConsts.DEADZONE && y > -1 * DriverControllerConsts.DEADZONE ? 0 : y;
         z = z < DriverControllerConsts.DEADZONE && z > -1 * DriverControllerConsts.DEADZONE ? 0 : z;
@@ -31,11 +32,17 @@ public class TeleOpDriveCommand extends CommandBase {
             z *= DriveConstants.FINE_SPEED_REDUCTION;
         }
 
-        driveSubsystem.drive(x, y, z, true, true);
+        driveSubsystem.drive(
+            x,
+            y,
+            z,
+            driverController.getRawAxis(DriverControllerConsts.HEADED_MODE_AXIS) < DriverControllerConsts.HEADED_MODE_THRESHOLD,
+            true
+        );
 
         // debug data
         // TODO: fix the raw axis outputs to match the drive method
-        final double X = x, Y = y, Z = z;
+        /*final double X = x, Y = y, Z = z;
         SmartDashboard.putNumber("joystick/X", X);
         SmartDashboard.putNumber("joystick/Y", Y);
         SmartDashboard.putNumber("joystick/Z", Z);
@@ -44,11 +51,11 @@ public class TeleOpDriveCommand extends CommandBase {
         SmartDashboard.putNumber("joystick/rawY", driverController.getRightX());
         SmartDashboard.putNumber("joystick/rawZ", driverController.getLeftX());
 
-        SmartDashboard.putBoolean("swerve/running", true);
+        SmartDashboard.putBoolean("swerve/running", true);*/
     }
 
     @Override
     public void end(boolean interrupted) {
-        SmartDashboard.putBoolean("swerve/running", false);
+        //SmartDashboard.putBoolean("swerve/running", false);
     }
 }

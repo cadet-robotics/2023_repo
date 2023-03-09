@@ -7,11 +7,11 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.LEDColors;
 import frc.robot.Constants.IOConstants.CoDriverControllerConsts;
 import frc.robot.commands.SetLightValueCommand;
-import frc.robot.commands.SetWheelLockStateCommand;
 import frc.robot.commands.arm.ManualArmDriveCommand;
 import frc.robot.commands.arm.SetArmLockCommand;
 import frc.robot.commands.arm.SetArmToPositionCommand;
 import frc.robot.commands.claw.RunClawMotorCommand;
+import frc.robot.commands.drive.SetWheelLockStateCommand;
 
 public class CoDriverController extends BaseController {
     public CoDriverController(int port, RobotContainer robotContainer) {
@@ -91,10 +91,9 @@ public class CoDriverController extends BaseController {
         );
 
         // set arm to fixed position
-        pov(0).onTrue(getArmHoldSwitch(ArmConstants.ARM_PRESET_POSITIONS[0]));
+        pov(0).onTrue(getArmHoldSwitch(ArmConstants.ARM_PRESET_POSITIONS[2]));
         pov(90).onTrue(getArmHoldSwitch(ArmConstants.ARM_PRESET_POSITIONS[1]));
-        pov(180).onTrue(getArmHoldSwitch(ArmConstants.ARM_PRESET_POSITIONS[2]));
-        pov(270).onTrue(getArmHoldSwitch(ArmConstants.ARM_PRESET_POSITIONS[3]));
+        pov(180).onTrue(getArmHoldSwitch(ArmConstants.ARM_PRESET_POSITIONS[0]));
 
         // locks arm in robot
         button(CoDriverControllerConsts.ARM_LOCK).onTrue(new SetArmLockCommand(

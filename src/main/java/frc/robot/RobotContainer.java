@@ -5,11 +5,19 @@
 
 package frc.robot;
 
+import java.io.File;
+
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.AnalogConstants;
 import frc.robot.Constants.IOConstants;
 import frc.robot.Constants.PWMConstants;
 import frc.robot.controllers.CoDriverController;
@@ -19,6 +27,7 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClawSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.utils.DistanceSensor;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -38,6 +47,13 @@ public class RobotContainer
     public final DriveSubsystem driveSubsystem;
     public final ClawSubsystem clawSubsystem;
 
+    // Sensors/extra declarations
+    public final DistanceSensor distanceSensor;
+
+    // Auto chooser
+    private final SendableChooser<String> autoSelector = new SendableChooser<>();
+    private static final String defaultAutoPath = "none";
+
     // TODO: convert each type of controller into its own wrapper class, and get rid of this subsystem
     //private final ControlSubsystem controlSubsystem = new ControlSubsystem(driveSubsystem, ledSubsystem);
 
@@ -55,6 +71,9 @@ public class RobotContainer
         driveSubsystem = new DriveSubsystem(this);
         clawSubsystem = new ClawSubsystem(this);
 
+        // init distance sensor
+        distanceSensor = new DistanceSensor(AnalogConstants.DISTANCE_SENSOR);
+
         /*driverController.button(1).onTrue(Commands.runOnce(() -> {
 
         }));*/
@@ -63,6 +82,32 @@ public class RobotContainer
         driverController.initBindings();
         codriverController.initBindings();
         homingController.initBindings();
+
+        // initialize auto path chooser
+        String pathWeaverPath = Filesystem.getDeployDirectory().getAbsolutePath() + "/pathplanner";
+        System.out.println(pathWeaverPath);
+        String[] paths = new File(pathWeaverPath).list();
+        for (int i = 0 ; i < paths.length; i++) {
+            String path = "";
+            int j = paths[i].length() - 1;
+            for (; j >= 0; j--) {
+                if (paths[i].charAt(j) == '.') {
+                    break;
+                }
+            }
+
+            path = paths[i].substring(0, j);
+
+            System.out.println(path);
+            autoSelector.addOption(path, path);
+        }
+
+        autoSelector.setDefaultOption(defaultAutoPath, defaultAutoPath);
+
+        SmartDashboard.putData(autoSelector);
+
+        // init cam server
+        CameraServer.startAutomaticCapture();
     }
     
     /**
@@ -72,9 +117,15 @@ public class RobotContainer
      */
     public Command getAutonomousCommand()
     {
+        System.out.println("GETTING: " + autoSelector.getSelected());
+
+        if (autoSelector.getSelected() == "none") {
+            return null;
+        }
+
         return driveSubsystem.followTrajectoryCommand(
             PathPlanner.loadPath(
-                "basic-path-1",
+                autoSelector.getSelected(),
                 new PathConstraints(3, 1)
             ),
             true

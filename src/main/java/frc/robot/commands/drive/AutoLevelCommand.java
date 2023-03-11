@@ -7,40 +7,45 @@ import frc.robot.subsystems.DriveSubsystem;
 
 public class AutoLevelCommand extends CommandBase {
     private DriveSubsystem driveSubsystem;
+    private boolean level = false;
 
     public AutoLevelCommand(DriveSubsystem driveSubsystem) {
         this.driveSubsystem = driveSubsystem;
     }
 
     @Override
-    public void execute() {
-        double speed = DriveConstants.AUTO_LEVEL_APPROACH_SPEED * getAdjustedGyroAngle();
+    public void execute()
+    {
+        double speed = 0;
 
-        driveSubsystem.drive(
-            speed,
-            0,
-            0,
-            false,
-            false
-        );
+        // get current pitch and check if level
+        float curPitch = driveSubsystem.ahrs.getPitch();
+        if(curPitch < DriveConstants.AUTO_LEVEL_ANGULAR_MARGIN &&
+           curPitch > -DriveConstants.AUTO_LEVEL_ANGULAR_MARGIN)
+        {
+            // will trip isFinished()
+            level = true;
+        }
+        else
+        {
+            // not level, move the bot
+            speed = DriveConstants.AUTO_LEVEL_APPROACH_SPEED * curPitch;
+            driveSubsystem.drive(
+                0,
+                speed,
+                0,
+                true,
+                false
+            );
+        }
 
         SmartDashboard.putNumber("autolevel/speed", speed);
-        SmartDashboard.putNumber("autolevel/adjustedangle", getAdjustedGyroAngle());
+        SmartDashboard.putNumber("autolevel/adjustedangle", curPitch);
     }
 
     @Override
-    public boolean isFinished() {
-        return getAdjustedGyroAngle() + DriveConstants.AUTO_LEVEL_ANGULAR_MARGIN > 0 &&
-            getAdjustedGyroAngle() - DriveConstants.AUTO_LEVEL_ANGULAR_MARGIN < 0;
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-        driveSubsystem.setDriveEnabled(false);
-        driveSubsystem.setX();
-    }
-
-    private double getAdjustedGyroAngle() {
-        return (double)driveSubsystem.ahrs.getPitch() - DriveConstants.GYRO_PITCH;
+    public boolean isFinished()
+    {
+        return level;
     }
 }

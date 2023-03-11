@@ -61,6 +61,8 @@ public class Robot extends TimedRobot
 
         SmartDashboard.putNumber("distanceSensorCm", robotContainer.distanceSensor.getDistanceCm());
         SmartDashboard.putBoolean("distanceSensor", robotContainer.distanceSensor.isWithinRange(0, 50));
+        SmartDashboard.putBoolean("gyroEnabled", robotContainer.distanceSensor.isWithinRange(0, 50));
+
     }
     
     

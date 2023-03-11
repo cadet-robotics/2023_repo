@@ -37,6 +37,10 @@ import frc.robot.utils.SwerveUtil;
 public class DriveSubsystem extends SubsystemBase {
     private RobotContainer robotContainer;
 
+    // ahrs Gyro Constants
+    private final int ANGLE_CHECK_DELAY = 100;
+    private final int OFFSET_ANGLE = 45;
+
     private boolean driveEnabled = true;
     public boolean homingMode = false; // TODO: get rid of this
     //public boolean headlessMode = true;
@@ -94,6 +98,9 @@ public class DriveSubsystem extends SubsystemBase {
         this.m_frontRightOffset = Preferences.getDouble("swerveFrontRightOffset", 0.0);
         this.m_backLeftOffset = Preferences.getDouble("swerveBackLeftOffset", 0.0);
         this.m_backRightOffset = Preferences.getDouble("swerveBackRightOffset", 0.0);
+
+        // Offset the Gyro to equal 0 when tilted on the bot
+        ahrs.setAngleAdjustment(OFFSET_ANGLE);
     }
 
     public void setDriveEnabled(boolean value) {
@@ -140,13 +147,13 @@ public class DriveSubsystem extends SubsystemBase {
 
         // debug data
         SwerveModuleState[] states = getSwerveModuleStates();
-        
+
         debugCounter.periodic(() -> {
             SmartDashboard.putNumber("swerve/angles/frontLeft", states[0].angle.getDegrees());
             SmartDashboard.putNumber("swerve/angles/frontRight", states[1].angle.getDegrees());
             SmartDashboard.putNumber("swerve/angles/backLeft", states[2].angle.getDegrees());
             SmartDashboard.putNumber("swerve/angles/backRight", states[3].angle.getDegrees());
-    
+
             SmartDashboard.putNumber("swerve/speed/frontLeft", states[0].speedMetersPerSecond);
             SmartDashboard.putNumber("swerve/speed/frontRight", states[1].speedMetersPerSecond);
             SmartDashboard.putNumber("swerve/speed/backLeft", states[2].speedMetersPerSecond);
@@ -168,7 +175,7 @@ public class DriveSubsystem extends SubsystemBase {
                 SwerveModules.m_backLeft.getTurningAbsoluteEncoder().getPosition());
             SmartDashboard.putNumber("swerve/encoders/absolute/backRight",
                 SwerveModules.m_backRight.getTurningAbsoluteEncoder().getPosition());
-            
+
             SmartDashboard.putBoolean("swerve/driveEnabled", driveEnabled);
             SmartDashboard.putBoolean("swerve/homingMode", homingMode);
 
@@ -203,12 +210,12 @@ public class DriveSubsystem extends SubsystemBase {
 
         double xSpeedCommanded;
         double ySpeedCommanded;
-    
+
         if (rateLimit) {
           // Convert XY to polar for rate limiting
           double inputTranslationDir = Math.atan2(ySpeed, xSpeed);
           double inputTranslationMag = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2));
-    
+
           // Calculate the direction slew rate based on an estimate of the lateral acceleration
           double directionSlewRate;
           if (m_currentTranslationMag != 0.0) {
@@ -216,7 +223,7 @@ public class DriveSubsystem extends SubsystemBase {
           } else {
             directionSlewRate = 500.0; //some high number that means the slew rate is effectively instantaneous
           }
-          
+
           double currentTime = WPIUtilJNI.now() * 1e-6;
           double elapsedTime = currentTime - m_prevTime;
           double angleDif = SwerveUtil.AngleDifference(inputTranslationDir, m_currentTranslationDir);
@@ -239,12 +246,12 @@ public class DriveSubsystem extends SubsystemBase {
             m_currentTranslationMag = m_magLimiter.calculate(0.0);
           }
           m_prevTime = currentTime;
-          
+
           xSpeedCommanded = m_currentTranslationMag * Math.cos(m_currentTranslationDir);
           ySpeedCommanded = m_currentTranslationMag * Math.sin(m_currentTranslationDir);
           m_currentRotation = m_rotLimiter.calculate(rot);
-    
-    
+
+
         } else {
           xSpeedCommanded = xSpeed;
           ySpeedCommanded = ySpeed;
@@ -319,7 +326,7 @@ public class DriveSubsystem extends SubsystemBase {
      * Sets the zero positions for all the motors
      */
     public void setModuleZeros() {
-       
+
         // get the current angle and add to the offset, the result is a new offset, robot must be restarted for module to accept
         double frontLeftOffset = SwerveModules.m_frontLeft.getState().angle.getRadians() + this.m_frontLeftOffset;
         // set the new offset into Prefferences, to be recalled next boot
@@ -353,5 +360,47 @@ public class DriveSubsystem extends SubsystemBase {
                 true
             )
         );
+    }
+
+    /**
+     * Checks the current pitch every 100ms as we are moving towards
+     * the desired pitch
+     *
+     * Note: makes the assumption that we are beginning with a pitch that is greater than the desired
+     *
+     * @param desiredPitch The angle that we want the robot to reach to change motion
+     */
+    public void waitForPitch(double desiredPitch)
+    {
+        while(ahrs.getPitch() > desiredPitch)
+        {
+             try
+             {
+                 Thread.sleep(ANGLE_CHECK_DELAY);
+             }
+             catch (InterruptedException e) {
+                 // don't expect, ignore handling
+             }
+        }
+    }
+
+    /**
+     * Go up the ramp at a slow speed, if angle exceeds a number start going backwards to
+     * correct it but if the angle is within a level range then stop all motors
+     */
+    public void autoLeveling()
+    {
+        //Move forward until angle changes
+        drive(0, -0.1, 0, true, false);
+        // TODO: test to see if its the correct angle
+        waitForPitch(50);
+
+        // Slow the speed by 1/4 when the angle changes as the bot starts going up the ramp
+        drive(0, -0.025, 0, true, false);
+
+        //if the bot becomes level stop moving the motors
+
+        waitForPitch(0);
+        drive(0, 0, 0, true, false);
     }
 }

@@ -6,6 +6,7 @@ import frc.robot.RobotContainer;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.LEDColors;
 import frc.robot.Constants.IOConstants.CoDriverControllerConsts;
+import frc.robot.Constants.IOConstants.DriverControllerConsts;
 import frc.robot.commands.SetLightValueCommand;
 import frc.robot.commands.arm.ManualArmDriveCommand;
 import frc.robot.commands.arm.SetArmLockCommand;
@@ -38,8 +39,8 @@ public class CoDriverController extends BaseController {
 
         // led controls
         axisGreaterThan(CoDriverControllerConsts.LED_MODIFIER_AXIS, CoDriverControllerConsts.LED_MODIFIER_THRESHOLD)
-            .and(button(CoDriverControllerConsts.GREEN_LIGHT))
-            .onTrue(new SetLightValueCommand(robotContainer.ledSubsystem, LEDColors.GREEN));
+            .and(button(CoDriverControllerConsts.VIOLET_LIGHT))
+            .onTrue(new SetLightValueCommand(robotContainer.ledSubsystem, LEDColors.VIOLET));
 
         axisGreaterThan(CoDriverControllerConsts.LED_MODIFIER_AXIS, CoDriverControllerConsts.LED_MODIFIER_THRESHOLD)
             .and(button(CoDriverControllerConsts.RED_LIGHT))
@@ -61,6 +62,11 @@ public class CoDriverController extends BaseController {
         button(CoDriverControllerConsts.CLAW_OPEN_BUTTON).onTrue(Commands.runOnce(() -> {
             robotContainer.clawSubsystem.setClawShut(false);
         }));
+
+        // auto level
+        /*button(DriverControllerConsts.AUTO_LEVEL_BUTTON).onTrue(Commands.runOnce(() -> {
+            robotContainer.driveSubsystem.autoLeveling();
+        }));*/
 
         // manual arm drive
         axisGreaterThan(CoDriverControllerConsts.ARM_MANUAL_AXIS, CoDriverControllerConsts.ARM_MANUAL_DEADZONE)

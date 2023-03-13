@@ -100,7 +100,7 @@ public class DriveSubsystem extends SubsystemBase {
         this.m_backRightOffset = Preferences.getDouble("swerveBackRightOffset", 0.0);
 
         // Offset the Gyro to equal 0 when tilted on the bot
-        ahrs.setAngleAdjustment(OFFSET_ANGLE);
+        //ahrs.setAngleAdjustment(OFFSET_ANGLE);
     }
 
     public void setDriveEnabled(boolean value) {
@@ -199,12 +199,16 @@ public class DriveSubsystem extends SubsystemBase {
         );
     }
 
+    public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
+        drive(xSpeed, ySpeed, rot, fieldRelative, rateLimit, false);
+    }
+
     /**
      * Drive method, taking in joystick positions
      * @return Success value of this operation
      */
-    public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
-        if (!driveEnabled) {
+    public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit, boolean override) {
+        if (!driveEnabled && !override) {
             return;
         }
 
@@ -342,6 +346,7 @@ public class DriveSubsystem extends SubsystemBase {
         Preferences.setDouble("swerveBackLeftOffset", backLeftOffset);
     }
 
+    // TODO: move auto route to correct side, remove team-dependant paths
     public Command followTrajectoryCommand(PathPlannerTrajectory path, boolean isFirstPath) {
         return new SequentialCommandGroup(
             new InstantCommand(() -> {
@@ -372,7 +377,7 @@ public class DriveSubsystem extends SubsystemBase {
      */
     public void waitForPitch(double desiredPitch)
     {
-        while(ahrs.getPitch() > desiredPitch)
+        while(ahrs.getPitch() + OFFSET_ANGLE > desiredPitch)
         {
              try
              {
@@ -390,6 +395,9 @@ public class DriveSubsystem extends SubsystemBase {
      */
     public void autoLeveling()
     {
+        // disable teleop drive command
+        setDriveEnabled(false);
+
         //Move forward until angle changes
         drive(0, -0.1, 0, true, false);
         // TODO: test to see if its the correct angle
@@ -402,5 +410,8 @@ public class DriveSubsystem extends SubsystemBase {
 
         waitForPitch(0);
         drive(0, 0, 0, true, false);
+
+        // lock wheels
+        setX();
     }
 }

@@ -39,6 +39,8 @@ public final class Constants
 
             public static final int ZERO_HEADING_BUTTON = 4; // Triangle
 
+            public static final int AUTO_LEVEL_BUTTON = 1; // Square
+
             //public static final int SET_HEADED_MODE = 7;
             //public static final int SET_HEADLESS_MODE = 8;
 
@@ -56,14 +58,13 @@ public final class Constants
 
             public static final int ARM_LOCK = 4; // Triangle
 
-            // TODO: remove LED code, cuz we let the magic smoke out of it
-            // TODO: switch analog RT to digital RT
+            
             public static final int LED_MODIFIER_AXIS = 4;
             public static final double LED_MODIFIER_THRESHOLD = 0.2;
-            public static final int GREEN_LIGHT = 1; // A
-            public static final int RED_LIGHT = 2; // B
-            public static final int BLUE_LIGHT = 3; // X
-            public static final int YELLOW_LIGHT = 4; // Y
+            public static final int VIOLET_LIGHT = 1; // Square
+            public static final int RED_LIGHT = 3; // Circle
+            public static final int BLUE_LIGHT = 2; // Cross
+            public static final int YELLOW_LIGHT = 4; // Triangle
 
             public static final int ARM_MANUAL_AXIS = 5; // right Y axis
             public static final double ARM_MANUAL_DEADZONE = 0.10;
@@ -133,8 +134,8 @@ public final class Constants
         public static final double kMaxSpeedMetersPerSecond = 4.8; // 4.8
         public static final double kMaxAngularSpeed = 1.75 * Math.PI; // radians per second
 
-        public static final double kDirectionSlewRate = 2.0; // radians per second  // original 1.2
-        public static final double kMagnitudeSlewRate = 5.0; // percent per second (1 = 100%) // 1.8
+        public static final double kDirectionSlewRate = 2.5; // radians per second  // original 1.2
+        public static final double kMagnitudeSlewRate = 6.0; // percent per second (1 = 100%) // 1.8
         public static final double kRotationalSlewRate = 5.0; // percent per second (1 = 100%) // 2.0
 
         // Chassis configuration
@@ -158,10 +159,22 @@ public final class Constants
 
         public static final double FINE_SPEED_REDUCTION = 0.3;
 
-        public static final double GYRO_PITCH = -42.25;
+        public static final float GYRO_PITCH = -41;
 
-        public static final double AUTO_LEVEL_APPROACH_SPEED = 0.2 * 0.006;
-        public static final double AUTO_LEVEL_ANGULAR_MARGIN = 5;
+        public static final double AUTO_LEVEL_APPROACH_SPEED = 0.4;
+        public static final double AUTO_LEVEL_ANGULAR_MARGIN = 2.5;
+
+        public static final double AUTO_LEVEL_ENTRY_ANGLE = 10;
+
+        public static final double AUTO_LEVEL_FINE_ANGLE = 7.5;
+        public static final double AUTO_LEVEL_FINE_SPEED = 0.25;
+
+        public static final int AUTO_LEVEL_TICK_DELAY = 1;
+        
+        public static final double FINALIZE_LEVEL_SPEED = 0.25;
+        public static final int FINALIZE_LEVEL_TIME = 10;
+
+        public static final double FINALIZE_START_DELAY = 0.5;
     } 
     
     public static final class ModuleConstants {
@@ -241,7 +254,7 @@ public final class Constants
 
     public static final class LEDColors {
         public static final double RED = 0.61;
-        public static final double GREEN = 0.77;
+        public static final double VIOLET = 0.91;
         public static final double BLUE = 0.85;
         public static final double YELLOW = 0.69;
     }
@@ -279,13 +292,28 @@ public final class Constants
 
         // arm preset positions
         public static final double[] ARM_PRESET_POSITIONS = {
-            0.2,
-            0.78,
-            0.95
+            0.4,  // .2
+            0.81, // .78
+            0.98 // 
         };
     }
 
     public static final class ClawConstants {
         public static final double INTAKE_SPEED_MAX = 0.2; // TODO: check the tuning of this value
+    }
+
+    public static final class AutoRoutes {
+        // Adds options for the autonomous SendableChooser
+        public static final String[] AUTO_ROUTES = {
+            "autoRoute1",
+            "autoRoute2",
+            "autoRoute3"
+        };
+
+        public static final class AutoRoute3 {
+            public static final double ARM_POSITION = 0.8;
+            public static final double ARM_RAISE_POSITION = 0.95;
+            public static final double ARM_DROP_WAIT = 4;
+        }
     }
 }

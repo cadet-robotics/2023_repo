@@ -37,7 +37,7 @@ public class AutoFactory {
     public Command getAutoRoute1() {
         PathPlannerTrajectory trajectory = PathPlanner.loadPath(
             "1-1",
-            new com.pathplanner.lib.PathConstraints(8, 4)
+            new com.pathplanner.lib.PathConstraints(6, 3)
         );
 
         Command pathFollowingCommand = robotContainer.driveSubsystem.followTrajectoryCommand(
@@ -47,7 +47,10 @@ public class AutoFactory {
 
         return Commands.sequence(
             pathFollowingCommand,
-            new AutoLevelSequence(robotContainer, false)
+            new AutoLevelSequence(robotContainer, true)/*,
+            Commands.runOnce(() -> {
+                robotContainer.driveSubsystem.ahrs.setAngleAdjustment(180);
+            })*/
         );
     }
     

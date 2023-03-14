@@ -18,6 +18,7 @@ public class AutoLevelCommand extends CommandBase {
 
     @Override
     public void initialize() {
+        levelTicks = 0;
         driveSubsystem.setDriveEnabled(false);
     }
 
@@ -76,6 +77,5 @@ public class AutoLevelCommand extends CommandBase {
     public void end(boolean interrupted) {
         //drive(0);
         driveSubsystem.setX();
-        //driveSubsystem.setX();
     }
 }

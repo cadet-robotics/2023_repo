@@ -311,7 +311,7 @@ public final class Constants
         };
 
         public static final class AutoRoute3 {
-            public static final double ARM_POSITION = 0.8;
+            public static final double ARM_POSITION = 0.90;
             public static final double ARM_RAISE_POSITION = 0.95;
             public static final double ARM_DROP_WAIT = 4;
         }

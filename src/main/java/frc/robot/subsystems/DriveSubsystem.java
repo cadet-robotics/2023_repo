@@ -375,7 +375,7 @@ public class DriveSubsystem extends SubsystemBase {
      *
      * @param desiredPitch The angle that we want the robot to reach to change motion
      */
-    public void waitForPitch(double desiredPitch)
+    /*public void waitForPitch(double desiredPitch)
     {
         while(ahrs.getPitch() + OFFSET_ANGLE > desiredPitch)
         {
@@ -387,13 +387,13 @@ public class DriveSubsystem extends SubsystemBase {
                  // don't expect, ignore handling
              }
         }
-    }
+    }*/
 
     /**
      * Go up the ramp at a slow speed, if angle exceeds a number start going backwards to
      * correct it but if the angle is within a level range then stop all motors
      */
-    public void autoLeveling()
+    /*public void autoLeveling()
     {
         // disable teleop drive command
         setDriveEnabled(false);
@@ -413,5 +413,5 @@ public class DriveSubsystem extends SubsystemBase {
 
         // lock wheels
         setX();
-    }
+    }*/
 }

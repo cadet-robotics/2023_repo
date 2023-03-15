@@ -18,7 +18,8 @@ public class SetArmLockCommand extends CommandBase {
         this.clawSubsystem = clawSubsystem;
 
         this.encoder = armSubsystem.getEncoder();
-
+        
+        System.out.println("[NOTE] Activated Auto Arm Lock");
         addRequirements(armSubsystem, clawSubsystem);
     }
 
@@ -40,5 +41,6 @@ public class SetArmLockCommand extends CommandBase {
     public void end(boolean interrupted) {
         clawSubsystem.setClawShut(false);
         armSubsystem.setMotors(0);
+        System.out.println("[NOTE] Auto Arm Lock Complete");
     }
 }

@@ -166,7 +166,7 @@ public final class Constants
 
         public static final double AUTO_LEVEL_ENTRY_ANGLE = 10;
 
-        public static final double AUTO_LEVEL_FINE_ANGLE = 7.5;
+        public static final double AUTO_LEVEL_FINE_ANGLE = 5.0; // 7.5
         public static final double AUTO_LEVEL_FINE_SPEED = 0.25;
 
         public static final int AUTO_LEVEL_TICK_DELAY = 1;
@@ -307,7 +307,8 @@ public final class Constants
         public static final String[] AUTO_ROUTES = {
             "autoRoute1",
             "autoRoute2",
-            "autoRoute3"
+            "autoRoute3",
+            "autoRoute4"
         };
 
         public static final class AutoRoute3 {

@@ -9,12 +9,21 @@ import frc.robot.commands.drive.DriveToRampCommand;
 import frc.robot.commands.drive.FinalizeLevelCommand;
 
 public class AutoLevelSequence extends SequentialCommandGroup {
-    public AutoLevelSequence(RobotContainer robotContainer, boolean inverse) {
+    public AutoLevelSequence(RobotContainer robotContainer, boolean inverse, boolean finalize) {
         addCommands(
             new DriveToRampCommand(robotContainer.driveSubsystem, inverse),
             new AutoLevelCommand(robotContainer.driveSubsystem, inverse),
-            new WaitCommand(DriveConstants.FINALIZE_START_DELAY),
-            new FinalizeLevelCommand(robotContainer.driveSubsystem, inverse)
+            new WaitCommand(DriveConstants.FINALIZE_START_DELAY)
         );
+
+        if (finalize) {
+            addCommands(
+                new FinalizeLevelCommand(robotContainer.driveSubsystem, inverse)
+            );
+        }
+    }
+
+    public AutoLevelSequence(RobotContainer robotContainer, boolean inverse) {
+        this(robotContainer, inverse, true);
     }
 }

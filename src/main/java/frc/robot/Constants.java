@@ -172,9 +172,8 @@ public final class Constants
         public static final int AUTO_LEVEL_TICK_DELAY = 1;
         
         public static final double FINALIZE_LEVEL_SPEED = 0.25;
-        public static final int FINALIZE_LEVEL_TIME = 10;
-
-        public static final double FINALIZE_START_DELAY = 0.5;
+        public static final int FINALIZE_LEVEL_TIME = 32; // 10, 15, 25
+        public static final double FINALIZE_START_DELAY = 1.75; // .75
     } 
     
     public static final class ModuleConstants {
@@ -292,14 +291,14 @@ public final class Constants
 
         // arm preset positions
         public static final double[] ARM_PRESET_POSITIONS = {
-            0.4,  // .2
+            0.35,  // .2
             0.81, // .78
             0.98 // 
         };
     }
 
     public static final class ClawConstants {
-        public static final double INTAKE_SPEED_MAX = 0.2; // TODO: check the tuning of this value
+        public static final double INTAKE_SPEED_MAX = 0.25; // TODO: check the tuning of this value
     }
 
     public static final class AutoRoutes {
@@ -307,8 +306,8 @@ public final class Constants
         public static final String[] AUTO_ROUTES = {
             "autoRoute1",
             "autoRoute2",
-            "autoRoute3",
-            "autoRoute4"
+            "autoRoute4",
+            "autoRoute5"
         };
 
         public static final class AutoRoute3 {

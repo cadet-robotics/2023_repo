@@ -15,6 +15,7 @@ import frc.robot.commands.drive.AutoLevelCommand;
 import frc.robot.commands.drive.DriveToRampCommand;
 import frc.robot.commands.drive.SetWheelLockStateCommand;
 import frc.robot.commands.drive.TimedDriveCommand;
+import frc.robot.commands.homing.ZeroHeadingCommand;
 
 public class AutoFactory {
     private RobotContainer robotContainer;
@@ -33,6 +34,8 @@ public class AutoFactory {
                 return getAutoRoute3();
             case "autoRoute4":
                 return getAutoRoute4();
+            case "autoRoute5":
+                return getAutoRoute5();
             default:
                 return null;
         }
@@ -142,4 +145,45 @@ public class AutoFactory {
             new AutoLevelSequence(robotContainer, true)
         );
     }
+    
+    public Command getAutoRoute5() {
+        PathPlannerTrajectory rotate180Trajectory = PathPlanner.loadPath(
+            "rotate180",
+            new com.pathplanner.lib.PathConstraints(1, 0.5)
+        );
+
+        return Commands.sequence(
+            // score cube
+            new SetClawShutCommand(robotContainer.clawSubsystem, true),
+            new WaitCommand(0.2),
+            Commands.runOnce(() -> {
+                robotContainer.clawSubsystem.setIntakeMotors(1);
+            }),
+            new WaitCommand(0.5),
+            Commands.runOnce(() -> {
+                robotContainer.clawSubsystem.setIntakeMotors(0);
+            }),
+            new WaitCommand(0.2),
+            new SetClawShutCommand(robotContainer.clawSubsystem, false),
+            new WaitCommand(0.5),
+            
+            // exit community
+            new TimedDriveCommand(
+                robotContainer.driveSubsystem,
+                150, // TODO: push
+                0.3,
+                0,
+                0,
+                false
+            ),
+
+            // rotate and zero heading
+            robotContainer.driveSubsystem.followTrajectoryCommand(rotate180Trajectory, false),
+            new ZeroHeadingCommand(robotContainer.driveSubsystem)
+        );
+    }
+
+    /*public Command getAutoRoute6() {
+        return 
+    }*/
 }

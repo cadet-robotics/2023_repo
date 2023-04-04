@@ -32,7 +32,8 @@ public class DriveToRampCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return driveSubsystem.ahrs.getPitch() - DriveConstants.GYRO_PITCH > DriveConstants.AUTO_LEVEL_ENTRY_ANGLE;
+        return driveSubsystem.ahrs.getPitch() - DriveConstants.GYRO_PITCH > DriveConstants.AUTO_LEVEL_ENTRY_ANGLE ||
+            driveSubsystem.ahrs.getPitch() - DriveConstants.GYRO_PITCH < -DriveConstants.AUTO_LEVEL_ENTRY_ANGLE;
     }
 
     @Override

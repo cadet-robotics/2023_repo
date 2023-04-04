@@ -23,7 +23,7 @@ public class AutoLevelCommand extends CommandBase {
 
     private void drive(double speed) {
         driveSubsystem.drive(
-            speed * (inverse ? -1 : 1),
+            speed * (inverse ? -1 : 1) * -1,
             0,
             0,
             true,
@@ -39,8 +39,8 @@ public class AutoLevelCommand extends CommandBase {
         
         // get current pitch and check if level
         float curPitch = driveSubsystem.ahrs.getPitch() - DriveConstants.GYRO_PITCH;
-        if(curPitch < DriveConstants.AUTO_LEVEL_ANGULAR_MARGIN &&
-        curPitch > -DriveConstants.AUTO_LEVEL_ANGULAR_MARGIN)
+        if(curPitch < DriveConstants.AUTO_LEVEL_ANGULAR_MARGIN + DriveConstants.AUTO_LEVEL_GOAL_PITCH &&
+        curPitch > -DriveConstants.AUTO_LEVEL_ANGULAR_MARGIN + DriveConstants.AUTO_LEVEL_GOAL_PITCH)
         {
             // will trip isFinished()
             levelTicks++;
@@ -49,7 +49,7 @@ public class AutoLevelCommand extends CommandBase {
         {
             // not level, move the bot
             boolean fineSpeed = curPitch < DriveConstants.AUTO_LEVEL_FINE_ANGLE && curPitch > -DriveConstants.AUTO_LEVEL_FINE_ANGLE;
-            speed = (fineSpeed ? DriveConstants.AUTO_LEVEL_FINE_SPEED : DriveConstants.AUTO_LEVEL_APPROACH_SPEED) * (curPitch/30);
+            speed = (fineSpeed ? DriveConstants.AUTO_LEVEL_FINE_SPEED : DriveConstants.AUTO_LEVEL_COARSE_SPEED) * (curPitch/30);
             drive(speed);
 
             levelTicks = 0;
@@ -75,6 +75,6 @@ public class AutoLevelCommand extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         //drive(0);
-        //driveSubsystem.setX();
+        driveSubsystem.setX();
     }
 }

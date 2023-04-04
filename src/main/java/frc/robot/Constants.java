@@ -161,16 +161,23 @@ public final class Constants
 
         public static final float GYRO_PITCH = -41;
 
-        public static final double AUTO_LEVEL_APPROACH_SPEED = 0.3;
+        public static final double AUTO_LEVEL_COARSE_SPEED = 0.20;
         public static final double AUTO_LEVEL_ANGULAR_MARGIN = 2.5;
+
+        public static final double AUTO_LEVEL_APPROACH_SPEED = 0.3;
 
         public static final double AUTO_LEVEL_ENTRY_ANGLE = 10;
 
         public static final double AUTO_LEVEL_FINE_ANGLE = 7.5; // 7.5
-        public static final double AUTO_LEVEL_FINE_SPEED = 0.15;
+        public static final double AUTO_LEVEL_FINE_SPEED = 0.10;
 
-        public static final int AUTO_LEVEL_TICK_DELAY = 10;
+        public static final double AUTO_LEVEL_GOAL_PITCH = -1;
+
+        public static final int AUTO_LEVEL_TICK_DELAY = 7;
         
+        public static final float DRIVE_UNTIL_PITCH_MARGIN = 1.5f;
+
+        // old, should be removed
         public static final double FINALIZE_LEVEL_SPEED = 0.21;
         public static final int FINALIZE_LEVEL_TIME = 30; // 10, 15, 25
         public static final double FINALIZE_START_DELAY = 1.75; // .75

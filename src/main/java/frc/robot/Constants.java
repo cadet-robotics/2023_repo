@@ -161,8 +161,12 @@ public final class Constants
 
         public static final float GYRO_PITCH = -41;
 
-        public static final double AUTO_LEVEL_APPROACH_SPEED = 0.3;
+        public static final double MAX_PITCH = 15;
+        public static final double AUTO_LEVEL_SPEED = 0.2;
         public static final double AUTO_LEVEL_ANGULAR_MARGIN = 2.5;
+
+        // Old stuff, remove this eventually
+        public static final double AUTO_LEVEL_APPROACH_SPEED = 0.3;
 
         public static final double AUTO_LEVEL_ENTRY_ANGLE = 10;
 

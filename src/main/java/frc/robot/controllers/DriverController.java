@@ -7,7 +7,8 @@ import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.IOConstants.DriverControllerConsts;
 import frc.robot.commands.auto.AutoLevelSequence;
-import frc.robot.commands.drive.AutoLevelCommand;
+import frc.robot.commands.drive.AutoLevelCycle;
+//import frc.robot.commands.drive.AutoLevelCommand;
 import frc.robot.commands.drive.DriveToRampCommand;
 import frc.robot.commands.drive.FinalizeLevelCommand;
 import frc.robot.commands.homing.ZeroHeadingCommand;
@@ -24,7 +25,7 @@ public class DriverController extends BaseController {
 
         button(DriverControllerConsts.BEGIN_AUTO_LEVEL_1)
             .and(button(DriverControllerConsts.BEGIN_AUTO_LEVEL_2))
-            .onTrue(new AutoLevelCommand(robotContainer.driveSubsystem, false));
+            .onTrue(new AutoLevelCycle(robotContainer)); /*new AutoLevelCommand(robotContainer.driveSubsystem, false)*/
     }
 
     // gets an axis after a x^2 operation has been applied to it

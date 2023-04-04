@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.utils.LogManager;
 
 public class AutoLevelCommand extends CommandBase {
     private DriveSubsystem driveSubsystem;
@@ -76,6 +75,6 @@ public class AutoLevelCommand extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         //drive(0);
-        driveSubsystem.setX();
+        //driveSubsystem.setX();
     }
 }

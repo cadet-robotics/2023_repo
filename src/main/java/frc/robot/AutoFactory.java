@@ -10,6 +10,7 @@ import frc.robot.Constants.AutoRoutes.AutoRoute3;
 import frc.robot.commands.arm.SetArmLockCommand;
 import frc.robot.commands.arm.SetArmToPositionCommand;
 import frc.robot.commands.auto.AutoLevelSequence;
+import frc.robot.commands.claw.RunClawMotorCommand;
 import frc.robot.commands.claw.SetClawShutCommand;
 import frc.robot.commands.drive.AutoLevelCommand;
 import frc.robot.commands.drive.DriveToRampCommand;
@@ -26,16 +27,18 @@ public class AutoFactory {
 
     public Command getAutoRoute(String route) {
         switch (route) {
-            case "autoRoute1":
+            case "WrapAroundLevel":
                 return getAutoRoute1();
-            case "autoRoute2":
+            case "Level":
                 return getAutoRoute2();
             case "autoRoute3":
                 return getAutoRoute3();
-            case "autoRoute4":
+            case "ScoreMobilityLevel":
                 return getAutoRoute4();
-            case "autoRoute5":
+            case "ScoreMobility":
                 return getAutoRoute5();
+            case "Score":
+                return getAutoRoute6();
             default:
                 return null;
         }
@@ -120,7 +123,7 @@ public class AutoFactory {
 
             new SetClawShutCommand(robotContainer.clawSubsystem, true),
             Commands.runOnce(() -> {
-                robotContainer.clawSubsystem.setIntakeMotors(1);
+                robotContainer.clawSubsystem.setIntakeMotors(0.3);
             }),
             new WaitCommand(0.5),
             Commands.runOnce(() -> {
@@ -170,20 +173,34 @@ public class AutoFactory {
             // exit community
             new TimedDriveCommand(
                 robotContainer.driveSubsystem,
-                150, // TODO: push
+                165,
                 0.3,
                 0,
                 0,
                 false
-            ),
+            )/*,
 
             // rotate and zero heading
             robotContainer.driveSubsystem.followTrajectoryCommand(rotate180Trajectory, false),
-            new ZeroHeadingCommand(robotContainer.driveSubsystem)
+            new ZeroHeadingCommand(robotContainer.driveSubsystem)*/
         );
     }
 
-    /*public Command getAutoRoute6() {
-        return 
-    }*/
+    public Command getAutoRoute6() {
+        return Commands.sequence(
+            new SetClawShutCommand(robotContainer.clawSubsystem, true),
+            new WaitCommand(0.2),
+            Commands.runOnce(() -> {
+                robotContainer.clawSubsystem.setIntakeMotors(0.2);
+            }),
+            new WaitCommand(1),
+            Commands.runOnce(() -> {
+                robotContainer.clawSubsystem.setIntakeMotors(0);
+            }),
+            new WaitCommand(1),
+            //new SetClawShutCommand(robotContainer.clawSubsystem, false)
+            
+            new SetArmLockCommand(robotContainer.armSubsystem, robotContainer.clawSubsystem)
+        );
+    }
 }

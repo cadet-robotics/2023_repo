@@ -24,7 +24,7 @@ public class DriverController extends BaseController {
 
         button(DriverControllerConsts.BEGIN_AUTO_LEVEL_1)
             .and(button(DriverControllerConsts.BEGIN_AUTO_LEVEL_2))
-            .onTrue(new AutoLevelSequence(robotContainer, false));
+            .onTrue(new AutoLevelCommand(robotContainer.driveSubsystem, false));
     }
 
     // gets an axis after a x^2 operation has been applied to it

@@ -131,8 +131,8 @@ public final class Constants
     public static final class DriveConstants {
         // Driving Parameters - Note that these are not the maximum capable speeds of
         // the robot, rather the allowed maximum speeds
-        public static final double kMaxSpeedMetersPerSecond = 4.8; // 4.8
-        public static final double kMaxAngularSpeed = 1.75 * Math.PI; // radians per second
+        public static final double kMaxSpeedMetersPerSecond = 5; // 4.8
+        public static final double kMaxAngularSpeed = 1.75 * Math.PI; // radians per second // 1.75
 
         public static final double kDirectionSlewRate = 2.5; // radians per second  // original 1.2
         public static final double kMagnitudeSlewRate = 6.0; // percent per second (1 = 100%) // 1.8
@@ -161,18 +161,18 @@ public final class Constants
 
         public static final float GYRO_PITCH = -41;
 
-        public static final double AUTO_LEVEL_APPROACH_SPEED = 0.4;
+        public static final double AUTO_LEVEL_APPROACH_SPEED = 0.3;
         public static final double AUTO_LEVEL_ANGULAR_MARGIN = 2.5;
 
         public static final double AUTO_LEVEL_ENTRY_ANGLE = 10;
 
-        public static final double AUTO_LEVEL_FINE_ANGLE = 5.0; // 7.5
-        public static final double AUTO_LEVEL_FINE_SPEED = 0.25;
+        public static final double AUTO_LEVEL_FINE_ANGLE = 7.5; // 7.5
+        public static final double AUTO_LEVEL_FINE_SPEED = 0.15;
 
-        public static final int AUTO_LEVEL_TICK_DELAY = 1;
+        public static final int AUTO_LEVEL_TICK_DELAY = 10;
         
-        public static final double FINALIZE_LEVEL_SPEED = 0.25;
-        public static final int FINALIZE_LEVEL_TIME = 32; // 10, 15, 25
+        public static final double FINALIZE_LEVEL_SPEED = 0.21;
+        public static final int FINALIZE_LEVEL_TIME = 30; // 10, 15, 25
         public static final double FINALIZE_START_DELAY = 1.75; // .75
     } 
     
@@ -298,16 +298,17 @@ public final class Constants
     }
 
     public static final class ClawConstants {
-        public static final double INTAKE_SPEED_MAX = 0.25; // TODO: check the tuning of this value
+        public static final double INTAKE_SPEED_MAX = 0.40; // TODO: check the tuning of this value
     }
 
     public static final class AutoRoutes {
         // Adds options for the autonomous SendableChooser
         public static final String[] AUTO_ROUTES = {
-            "autoRoute1",
-            "autoRoute2",
-            "autoRoute4",
-            "autoRoute5"
+            "WrapAroundLevel",
+            "Level",
+            "ScoreMobilityLevel",
+            "ScoreMobility",
+            "Score"
         };
 
         public static final class AutoRoute3 {

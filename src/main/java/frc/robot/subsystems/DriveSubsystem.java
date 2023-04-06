@@ -98,7 +98,6 @@ public class DriveSubsystem extends SubsystemBase {
         this.m_frontRightOffset = Preferences.getDouble("swerveFrontRightOffset", 0.0);
         this.m_backLeftOffset = Preferences.getDouble("swerveBackLeftOffset", 0.0);
         this.m_backRightOffset = Preferences.getDouble("swerveBackRightOffset", 0.0);
-
         // Offset the Gyro to equal 0 when tilted on the bot
         //ahrs.setAngleAdjustment(OFFSET_ANGLE);
     }

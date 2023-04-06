@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import frc.robot.commands.drive.AutoRateLevelCommand;
 
 // TODO: fix casing 
 public final class Constants
@@ -159,17 +160,24 @@ public final class Constants
 
         public static final double FINE_SPEED_REDUCTION = 0.3;
 
-        public static final float GYRO_PITCH = -41;
+        public static final float GYRO_PITCH = -42.4f;
 
-        public static final double AUTO_LEVEL_COARSE_SPEED = 0.20;
+        
+        // new autolevel constants
+        public static final double AUTO_LEVEL_DEFAULT_SPEED = 0.09;
+        public static final Float AUTO_LEVEL_END_RATE 
+            = AutoRateLevelCommand.toDegreesPerTick(4.5f); // unit: Δdegrees/s
+
+        // old autolevel stuff mostly, probably should delete at some point to reduce confusion
+        public static final double AUTO_LEVEL_COARSE_SPEED = 0.225;
         public static final double AUTO_LEVEL_ANGULAR_MARGIN = 2.5;
 
         public static final double AUTO_LEVEL_APPROACH_SPEED = 0.3;
 
-        public static final double AUTO_LEVEL_ENTRY_ANGLE = 10;
+        public static final double AUTO_LEVEL_ENTRY_ANGLE = 14;
 
-        public static final double AUTO_LEVEL_FINE_ANGLE = 7.5; // 7.5
-        public static final double AUTO_LEVEL_FINE_SPEED = 0.10;
+        public static final double AUTO_LEVEL_FINE_ANGLE = 5; // 7.5
+        public static final double AUTO_LEVEL_FINE_SPEED = 0.125;
 
         public static final double AUTO_LEVEL_GOAL_PITCH = -1;
 
@@ -315,7 +323,8 @@ public final class Constants
             "Level",
             "ScoreMobilityLevel",
             "ScoreMobility",
-            "Score"
+            "Score",
+            "HScore"
         };
 
         public static final class AutoRoute3 {

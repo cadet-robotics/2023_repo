@@ -3,6 +3,7 @@ package frc.robot;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -39,6 +40,8 @@ public class AutoFactory {
                 return getAutoRoute5();
             case "Score":
                 return getAutoRoute6();
+            case "HScore":
+                return getAutoRoute7();
             default:
                 return null;
         }
@@ -50,7 +53,7 @@ public class AutoFactory {
     public Command getAutoRoute1() {
         PathPlannerTrajectory trajectory = PathPlanner.loadPath(
             "1-1",
-            new com.pathplanner.lib.PathConstraints(6, 3)
+            new com.pathplanner.lib.PathConstraints(10, 7)
         );
 
         Command pathFollowingCommand = robotContainer.driveSubsystem.followTrajectoryCommand(
@@ -60,7 +63,7 @@ public class AutoFactory {
 
         return Commands.sequence(
             pathFollowingCommand,
-            new AutoLevelSequence(robotContainer, true, true)/*,
+            new AutoLevelSequence(robotContainer, false, true)/*,
             Commands.runOnce(() -> {
                 robotContainer.driveSubsystem.ahrs.setAngleAdjustment(180);
             })*/
@@ -70,7 +73,7 @@ public class AutoFactory {
     // Starts around position 2
     // Auto levels
     public Command getAutoRoute2() {
-        return new AutoLevelSequence(robotContainer, true);
+        return new AutoLevelSequence(robotContainer, false);
     }
 
     // Starts around position 2, at a pole
@@ -112,6 +115,11 @@ public class AutoFactory {
     }
 
     public Command getAutoRoute4() {
+        PathPlannerTrajectory flip180 = PathPlanner.loadPath(
+            "rotate180",
+            new com.pathplanner.lib.PathConstraints(4, 2)
+        );
+
         return Commands.sequence(
             // score cube
             /*new SetArmToPositionCommand(
@@ -120,7 +128,6 @@ public class AutoFactory {
                 0.1,
                 false
             ),*/
-
             new SetClawShutCommand(robotContainer.clawSubsystem, true),
             Commands.runOnce(() -> {
                 robotContainer.clawSubsystem.setIntakeMotors(0.3);
@@ -129,7 +136,7 @@ public class AutoFactory {
             Commands.runOnce(() -> {
                 robotContainer.clawSubsystem.setIntakeMotors(0);
             }),
-            new SetClawShutCommand(robotContainer.clawSubsystem, false),
+            new SetArmLockCommand(robotContainer.armSubsystem, robotContainer.clawSubsystem),
             new WaitCommand(0.5),
             
             // exit community
@@ -144,8 +151,13 @@ public class AutoFactory {
             new WaitCommand(0.25),
             //new SetWheelLockStateCommand(robotContainer, false),
 
+            // spin, prep for auto level
+            robotContainer.driveSubsystem.followTrajectoryCommand(flip180, true),
+            new ZeroHeadingCommand(robotContainer.driveSubsystem),
+            new WaitCommand(1),
+
             // auto level
-            new AutoLevelSequence(robotContainer, true)
+            new AutoLevelSequence(robotContainer, false)
         );
     }
     
@@ -201,6 +213,58 @@ public class AutoFactory {
             //new SetClawShutCommand(robotContainer.clawSubsystem, false)
             
             new SetArmLockCommand(robotContainer.armSubsystem, robotContainer.clawSubsystem)
+        );
+    }
+
+    public Command getAutoRoute7() {
+        int backUpTicks = 20;
+        int approachTicks = backUpTicks + 5;
+        double vomitDelay = 2;
+        
+        return Commands.sequence(
+            // back up
+            new TimedDriveCommand(
+                robotContainer.driveSubsystem,
+                backUpTicks,
+                0.2,
+                0,
+                0,
+                false
+            ),
+            // shuts claw
+            new SetClawShutCommand(robotContainer.clawSubsystem, true),
+            new WaitCommand(2),
+            // approach with arm up
+            Commands.parallel(
+                // brings arm up
+                new SetArmToPositionCommand(
+                    robotContainer.clawSubsystem,
+                    robotContainer.armSubsystem,
+                    0,
+                    true
+                ),
+                // approaches top level
+                new TimedDriveCommand(
+                    robotContainer.driveSubsystem,
+                    approachTicks,
+                    -0.2,
+                    0,
+                    0,
+                    false
+                ),
+                // spits out thing
+                Commands.sequence(
+                    new WaitCommand(vomitDelay),
+                    new RunClawMotorCommand(robotContainer.clawSubsystem, false),
+                    new WaitCommand(1),
+                    Commands.runOnce(() -> {
+                        robotContainer.clawSubsystem.setIntakeMotors(0);
+                    }),
+                    Commands.runOnce(() -> {
+                        robotContainer.clawSubsystem.getCurrentCommand().cancel();
+                    })
+                )
+            )
         );
     }
 }

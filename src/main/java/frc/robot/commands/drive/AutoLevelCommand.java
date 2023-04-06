@@ -44,6 +44,7 @@ public class AutoLevelCommand extends CommandBase {
         {
             // will trip isFinished()
             levelTicks++;
+            drive(0);
         }
         else
         {

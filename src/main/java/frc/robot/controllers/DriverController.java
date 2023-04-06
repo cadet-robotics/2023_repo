@@ -8,8 +8,10 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.IOConstants.DriverControllerConsts;
 import frc.robot.commands.auto.AutoLevelSequence;
 import frc.robot.commands.drive.AutoLevelCommand;
+import frc.robot.commands.drive.AutoRateLevelCommand;
 import frc.robot.commands.drive.DriveToRampCommand;
 import frc.robot.commands.drive.FinalizeLevelCommand;
+import frc.robot.commands.drive.RotateDegreesCommand;
 import frc.robot.commands.homing.ZeroHeadingCommand;
 import frc.robot.subsystems.DriveSubsystem;
 
@@ -24,7 +26,15 @@ public class DriverController extends BaseController {
 
         button(DriverControllerConsts.BEGIN_AUTO_LEVEL_1)
             .and(button(DriverControllerConsts.BEGIN_AUTO_LEVEL_2))
+            .and(button(13).negate())
             .onTrue(new AutoLevelSequence(robotContainer, false, false));
+
+        button(DriverControllerConsts.BEGIN_AUTO_LEVEL_1)
+            .and(button(DriverControllerConsts.BEGIN_AUTO_LEVEL_2))
+            .and(button(13))
+            .onTrue(new AutoLevelSequence(robotContainer, true, false));
+
+        button(12).onTrue(new RotateDegreesCommand(robotContainer, 180, 0.15));
     }
 
     // gets an axis after a x^2 operation has been applied to it
